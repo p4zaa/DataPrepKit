@@ -6,6 +6,7 @@ import re
 import pythainlp
 from pythainlp.util import normalize
 from pythainlp.corpus.common import thai_stopwords
+from pythainlp.tokenize import word_tokenize
 
 ####### Functions ########
 def normalize_word(sentence):
