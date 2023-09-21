@@ -1,4 +1,5 @@
 import re
+from ThaiTextPrepKit import vowel_typo
 
 def fix_common_word(x):
     #vowel_typo = '่้๊๋็ีัเ' # ่ ้ ๊ ๋ ็ ี ั เ
