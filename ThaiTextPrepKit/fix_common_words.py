@@ -5,6 +5,7 @@ def fix_common_word(x):
     #vowel_typo = '่้๊๋็ีัเ' # ่ ้ ๊ ๋ ็ ี ั เ
     x = re.sub('(ๅ)', '', x)
     x = re.sub(f'(แอ[พปฟผ]*[พปฟผ]*ลิเคช[ัี]*[{vowel_typo}]น)|(แอ[{vowel_typo}]*[พปฟผฯ][ฯ]*(?!เปิ[{vowel_typo}]*ล))|(aplication|application|app)', 'แอปพลิเคชัน', x)
+    x = re.sub(f'([เแ]อ[{vowel_typo}]*[ปผแบยลำพะฟห][เด้]ป[ิฺอื]*[ลน])', 'แอปเปิ้ล', x)
     x = re.sub('(scan|แสกน)', 'สแกน', x)
     x = re.sub('(time)', 'เวลา', x)
     x = re.sub(f'(ใข้วาน)|([ไใฝำ]*[ชข][{vowel_typo}]*[ง|ว|ฝ][า|ส|่]น)', 'ใช้งาน', x)
