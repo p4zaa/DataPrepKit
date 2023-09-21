@@ -1,3 +1,5 @@
+import re
+
 def fix_common_word(x):
     vowel_typo = '่้๊๋็ีัเ' # ่ ้ ๊ ๋ ็ ี ั เ
     x = re.sub('(ๅ)', '', x)
