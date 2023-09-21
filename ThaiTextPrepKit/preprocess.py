@@ -7,6 +7,7 @@ import pythainlp
 from pythainlp.util import normalize
 from pythainlp.corpus.common import thai_stopwords
 from pythainlp.tokenize import word_tokenize
+import fix-common-words
 
 ####### Functions ########
 def normalize_word(sentence):
@@ -56,7 +57,7 @@ def preprocess_text(text_list, keep_stopwords=False, keep_original=True):
 
             # Convert to lowercase before calling fix_common_word
             sent = sent.lower().strip()
-            sent = fix_common_word(sent)
+            sent = fix-common-words.fix_common_word(sent)
 
             # Tokenize words
             if keep_original:
@@ -101,6 +102,7 @@ def preprocess_text(text_list, keep_stopwords=False, keep_original=True):
 
     return preprocessed_texts
 
+'''
 def fix_common_word(x):
     vowel_typo = '่้๊๋็ีัเ' # ่ ้ ๊ ๋ ็ ี ั เ
     x = re.sub('(ๅ)', '', x)
@@ -153,3 +155,4 @@ def fix_common_word(x):
     x = re.sub(f'([โดเก]ค[ห]*[วสงย][ิื]*[{vowel_typo}]*[ดคตท]*[- ]*19)|(covid[ ]*19)', 'covid-19', x)
     x = re.sub(f'([ตคจ][{vowel_typo}]*[อิแ]*[{vowel_typo}]*[วง][กดห][่าส][รนี])', 'ต้องการ', x)
     return x
+'''
