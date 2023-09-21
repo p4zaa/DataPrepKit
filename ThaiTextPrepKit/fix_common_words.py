@@ -4,7 +4,7 @@ from ThaiTextPrepKit import __version__, vowel_typo
 def fix_common_word(x):
     #vowel_typo = '่้๊๋็ีัเ' # ่ ้ ๊ ๋ ็ ี ั เ
     x = re.sub('(ๅ)', '', x)
-    x = re.sub(f'(แอ[พปฟผ]*[พปฟผ]*ลิเคช[ัี]*[{vowel_typo}]น)|(แอ[{vowel_typo}]*[พปฟผฯ][ฯ]*|แอ้ป|แอ๊ป|แอฟ|แอ้ฟ|แอ๊ฟ|แอพ|แอ้พ|แอ๊พ|แอปฯ|แอฟฯ|แอพฯ)|(aplication|application|app)', 'แอปพลิเคชัน', x)
+    x = re.sub(f'(แอ[พปฟผ]*[พปฟผ]*ลิเคช[ัี]*[{vowel_typo}]น)|(แอ[{vowel_typo}]*[พปฟผฯ][ฯ]*(?!เปิล))|(aplication|application|app)', 'แอปพลิเคชัน', x)
     x = re.sub('(scan|แสกน)', 'สแกน', x)
     x = re.sub('(time)', 'เวลา', x)
     x = re.sub(f'(ใข้วาน)|([ไใฝำ]*[ชข][{vowel_typo}]*[ง|ว|ฝ][า|ส|่]น)', 'ใช้งาน', x)
