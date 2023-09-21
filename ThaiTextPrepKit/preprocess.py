@@ -57,7 +57,7 @@ def preprocess_text(text_list, keep_stopwords=False, keep_original=True):
 
             # Convert to lowercase before calling fix_common_word
             sent = sent.lower().strip()
-            sent = fix-common-words.fix_common_word(sent)
+            sent = fix_common_words.fix_common_word(sent)
 
             # Tokenize words
             if keep_original:
