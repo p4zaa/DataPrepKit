@@ -21,7 +21,7 @@ exclude_stopwords = []
 for word in exclude_stopwords:
     stopwords.remove(word)
 
-def preprocess_text(text_list, keep_stopwords=False, keep_original=True):
+def preprocess_text(text_list, keep_stopwords=True, keep_original=True):
 
     preprocessed_texts = []
     url_pattern = re.compile(
