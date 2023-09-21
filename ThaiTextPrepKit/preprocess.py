@@ -7,7 +7,7 @@ import pythainlp
 from pythainlp.util import normalize
 from pythainlp.corpus.common import thai_stopwords
 from pythainlp.tokenize import word_tokenize
-from ThaiTextPrepKit import fix_common_words
+from ThaiTextPrepKit import __version__, fix_common_words
 
 ####### Functions ########
 def normalize_word(sentence):
