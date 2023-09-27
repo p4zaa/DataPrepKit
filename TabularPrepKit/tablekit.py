@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 
 def combine_labels(df:pd.DataFrame, id_cols:list, label_cols:list, drop_duplicates:bool=True):
     """Combines the labels for each row of a DataFrame into a single label.
