@@ -16,7 +16,7 @@ def combine_labels(df:pd.DataFrame, id_cols:list, label_cols:list, drop_duplicat
         A Pandas DataFrame with the combined labels.
     """
 
-    df = df.reset_index()
+    df = df.reset_index(drop=True)
 
     # Create a NumPy array to store the combined labels.
     combined_labels = np.empty(len(df), dtype=object)
