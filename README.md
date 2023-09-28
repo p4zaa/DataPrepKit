@@ -3,7 +3,7 @@ A data preprocessing for some specific task.
 
 # Installation
 ```python
-pip install git+'https://github.com/p4zaa/DataPrepKit.git'
+pip install --upgrade git+'https://github.com/p4zaa/DataPrepKit.git'
 from ThaiTextPrepKit import preprocess
 from TabularPrepKit import tablekit
 ```
