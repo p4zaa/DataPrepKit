@@ -1,6 +1,7 @@
 #### ATTEMPT 4.2.1 ####
 
 import pandas as pd
+import polars as pl
 import numpy as np
 from tqdm import tqdm
 
@@ -50,5 +51,41 @@ def combine_labels(df:pd.DataFrame, id_cols:list, label_cols:list, drop_duplicat
     else:
       return df
                         
+# Example usage:
+# combined_df = combine_labels(your_dataframe, id_cols=['ID'], label_cols=['Label1', 'Label2'])
+
+def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_considering:bool=True):
+    """Combines the labels for each row of a DataFrame into a single label.
+
+    Args:
+        df: A Polars DataFrame.
+        id_cols: A list of column names that uniquely identify each row of the DataFrame.
+        label_cols: A list of column names containing labels.
+
+    Returns:
+        A Polars DataFrame with the combined labels.
+    """
+    
+    # Require Polars 0.19.5
+    q = (
+        df\
+        .lazy()\
+        .join(
+            df\
+            .lazy()\
+            .group_by(by=id_cols)\
+            .agg(
+                pl.col(label_cols).filter(pl.col(label_cols).is_not_null()).cast(pl.Utf8),
+            )\
+            .with_columns(
+                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x))).list.join('|').alias('Combined Labels'),
+            )\
+            .select(pl.col(id_cols + ['Combined Labels'])),
+            on=id_cols,
+        )
+    )
+    
+    return q.collect() if label_considering else df.unique(subset=id_cols, keep='any')
+
 # Example usage:
 # combined_df = combine_labels(your_dataframe, id_cols=['ID'], label_cols=['Label1', 'Label2'])
