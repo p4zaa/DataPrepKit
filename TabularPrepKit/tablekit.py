@@ -70,19 +70,23 @@ def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_
     q = (
         df\
         .lazy()\
-        .group_by(by=id_cols)\
-        .agg(
-            pl.col(label_cols).filter(pl.col(label_cols).is_not_null()).cast(pl.Utf8),
-        )\
-        .with_columns(
-            pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x))).list.join('|').alias('Combined Labels'),
-        )\
-        .select(pl.col(id_cols + ['Combined Labels']))\
         .join(
-            df.lazy(),
+            df\
+            .lazy()\
+            .group_by(by=id_cols)\
+            .agg(
+                pl.col(label_cols).filter(pl.col(label_cols).is_not_null()).cast(pl.Utf8),
+            )\
+            .with_columns(
+                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x))).list.join('|').alias('Combined Labels'),
+            )\
+            .select(pl.col(id_cols + ['Combined Labels'])),
             on=id_cols,
         )\
-        .unique(subset=id_cols, keep='any')
+        .unique(
+            subset=id_cols, 
+            keep='any'
+            )
     )
     
     return q.collect() if label_considering else df.unique(subset=id_cols, keep='any')
