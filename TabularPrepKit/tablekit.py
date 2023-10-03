@@ -100,7 +100,7 @@ def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_
                 pl.col(label_cols).filter(pl.col(label_cols).is_not_null()).cast(pl.Utf8),
             )\
             .with_columns(
-                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x))).alias('Combined Labels'),
+                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: None if len(x)==0 else list(set(x))).alias('Combined Labels'),
             )\
             .select(pl.col(id_cols + ['Combined Labels'])),
             on=id_cols,
