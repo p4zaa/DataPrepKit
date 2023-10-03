@@ -38,7 +38,7 @@ def combine_labels(df:pd.DataFrame, id_cols:list, label_cols:list, drop_duplicat
         #group_labels = [label for label in group_labels if label not in [' ', 999, 111]]
 
         # Convert float values to integers and remove any empty strings or invalid labels from the list.
-        group_labels = [int(label) if isinstance(label, float) else label for label in group_labels if label not in [' ', 999, 111]]
+        group_labels = set(int(label) if isinstance(label, float) else label for label in group_labels if label not in [' ', 999, 111]])
 
         # Join the labels into a single string, separated by pipes (`|`).
         combined_labels[group.index] = '|'.join(map(str, group_labels))
