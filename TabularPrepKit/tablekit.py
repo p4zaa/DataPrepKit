@@ -115,7 +115,7 @@ def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_
         return q_str.collect() if to_str else q_list.collect() 
     
     else:
-        df.unique(subset=id_cols, keep='any')
+        return df.unique(subset=id_cols, keep='any')
 
 # Example usage:
 # combined_df = combine_labels(your_dataframe, id_cols=['ID'], label_cols=['Label1', 'Label2'])
