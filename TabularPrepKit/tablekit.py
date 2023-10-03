@@ -54,7 +54,7 @@ def combine_labels(df:pd.DataFrame, id_cols:list, label_cols:list, drop_duplicat
 # Example usage:
 # combined_df = combine_labels(your_dataframe, id_cols=['ID'], label_cols=['Label1', 'Label2'])
 
-def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_considering:bool=True):
+def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_considering:bool=True, to_str:bool=True):
     """Combines the labels for each row of a DataFrame into a single label.
 
     Args:
@@ -67,7 +67,7 @@ def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_
     """
     
     # Require Polars 0.19.5
-    q = (
+    q_str = (
         df\
         .lazy()\
         .join(
@@ -88,8 +88,34 @@ def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_
             keep='any'
             )
     )
+
+    q_list = (
+        df\
+        .lazy()\
+        .join(
+            df\
+            .lazy()\
+            .group_by(by=id_cols)\
+            .agg(
+                pl.col(label_cols).filter(pl.col(label_cols).is_not_null()).cast(pl.Utf8),
+            )\
+            .with_columns(
+                pl.concat_list(pl.col(label_cols)).alias('Combined Labels'),
+            )\
+            .select(pl.col(id_cols + ['Combined Labels'])),
+            on=id_cols,
+        )\
+        .unique(
+            subset=id_cols, 
+            keep='any'
+            )
+    )
+
+    if label_considering:
+        return q_str.collect() if to_str else q_list.collect() 
     
-    return q.collect() if label_considering else df.unique(subset=id_cols, keep='any')
+    else:
+        df.unique(subset=id_cols, keep='any')
 
 # Example usage:
 # combined_df = combine_labels(your_dataframe, id_cols=['ID'], label_cols=['Label1', 'Label2'])
