@@ -4,7 +4,7 @@ A data preprocessing for some specific task.
 # Installation
 ```python
 pip install --upgrade git+'https://github.com/p4zaa/DataPrepKit.git'
-from ThaiTextPrepKit import preprocess
+from ThaiTextPrepKit import pretextkit
 from TabularPrepKit import tablekit
 ```
 
