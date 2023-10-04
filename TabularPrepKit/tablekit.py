@@ -55,7 +55,7 @@ def combine_labels(df:pd.DataFrame, id_cols:list, label_cols:list, drop_duplicat
 # combined_df = combine_labels(your_dataframe, id_cols=['ID'], label_cols=['Label1', 'Label2'])
 
 
-def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_considering:bool=True, to_str:bool=False):
+def combine_labels_polars(df: pl.DataFrame, id_cols: list, label_cols: list, label_considering: bool = True, to_str: bool = False, alias_str: str = 'Combined Labels'):
     """Combines the labels for each row of a DataFrame into a single label.
 
     Args:
@@ -79,7 +79,7 @@ def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_
                 pl.col(label_cols).filter(pl.col(label_cols).is_not_null()).cast(pl.Utf8),
             )\
             .with_columns(
-                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x))).list.join('|').alias('Combined Labels'),
+                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x))).list.join('|').alias(alias_str),
             )\
             .select(pl.col(id_cols + ['Combined Labels'])),
             on=id_cols,
@@ -121,7 +121,7 @@ def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_
 # Example usage:
 # combined_df = combine_labels(your_dataframe, id_cols=['ID'], label_cols=['Label1', 'Label2'])
 
-def one_hot_encode_polars(df: pl.DataFrame, id_cols: str|list[str], column: str, separator: str = '_', rename_encoded_cols: bool = False) -> pl.DataFrame:
+def one_hot_encode_polars(df: pl.DataFrame, id_cols: str|list[str], column: str = 'Combined Labels', separator: str = '_', rename_encoded_cols: bool = False) -> pl.DataFrame:
     """Encodes the specified columns in the given dataframe.
     
     Args:
