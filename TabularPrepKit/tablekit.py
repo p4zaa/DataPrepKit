@@ -54,6 +54,7 @@ def combine_labels(df:pd.DataFrame, id_cols:list, label_cols:list, drop_duplicat
 # Example usage:
 # combined_df = combine_labels(your_dataframe, id_cols=['ID'], label_cols=['Label1', 'Label2'])
 
+
 def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_considering:bool=True, to_str:bool=True):
     """Combines the labels for each row of a DataFrame into a single label.
 
@@ -65,7 +66,7 @@ def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_
     Returns:
         A Polars DataFrame with the combined labels.
     """
-    
+
     # Require Polars 0.19.5
     q_str = (
         df\
@@ -78,13 +79,13 @@ def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_
                 pl.col(label_cols).filter(pl.col(label_cols).is_not_null()).cast(pl.Utf8),
             )\
             .with_columns(
-                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: None if len(x)==0 else list(set(x))).list.join('|').alias('Combined Labels'),
+                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x))).list.join('|').alias('Combined Labels'),
             )\
             .select(pl.col(id_cols + ['Combined Labels'])),
             on=id_cols,
         )\
         .unique(
-            subset=id_cols, 
+            subset=id_cols,
             keep='any'
             )
     )
@@ -100,22 +101,44 @@ def combine_labels_polars(df:pl.DataFrame, id_cols:list, label_cols:list, label_
                 pl.col(label_cols).filter(pl.col(label_cols).is_not_null()).cast(pl.Utf8),
             )\
             .with_columns(
-                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: None if len(x)==0 else list(set(x))).alias('Combined Labels'),
+                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x))).alias('Combined Labels'),
             )\
             .select(pl.col(id_cols + ['Combined Labels'])),
             on=id_cols,
         )\
         .unique(
-            subset=id_cols, 
+            subset=id_cols,
             keep='any'
             )
     )
 
     if label_considering:
-        return q_str.collect() if to_str else q_list.collect() 
-    
+        return q_str.collect() if to_str else q_list.collect()
+
     else:
         return df.unique(subset=id_cols, keep='any')
 
 # Example usage:
 # combined_df = combine_labels(your_dataframe, id_cols=['ID'], label_cols=['Label1', 'Label2'])
+
+def one_hot_encode_polars(df: pl.DataFrame, id_cols: str|list[str], column: str, separator: str = '_', rename_encoded_cols: bool = False) -> pl.DataFrame:
+    """Encodes the specified columns in the given dataframe.
+    
+    Args:
+    df: The dataframe to encode.
+    id_cols: The columns to use as the grouping columns.
+    column: A column to encode.
+    separator: The separator to use when creating the one-hot encoded columns.
+    
+    Returns:
+    A dataframe with the encoded columns.
+    """
+    q = (
+      df
+      .explode(column)
+      .to_dummies(columns=column, separator=separator)
+      .group_by(id_cols)
+      .agg(pl.all().max())
+    )
+    
+    return rename_encoded_columns(q, column, separator) if rename_encoded_cols else q
