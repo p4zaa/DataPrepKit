@@ -55,7 +55,7 @@ def combine_labels(df:pd.DataFrame, id_cols:list, label_cols:list, drop_duplicat
 # combined_df = combine_labels(your_dataframe, id_cols=['ID'], label_cols=['Label1', 'Label2'])
 
 
-def combine_labels_polars(df: pl.DataFrame, id_cols: list, label_cols: list, label_considering: bool = True, to_str: bool = False, alias_str: str = 'Combined Labels'):
+def combine_labels_polars(df: pl.DataFrame, id_cols: list, label_cols: list = None, label_considering: bool = True, to_str: bool = False, alias_str: str = 'Combined Labels'):
     """Combines the labels for each row of a DataFrame into a single label.
 
     Args:
