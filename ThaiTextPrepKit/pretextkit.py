@@ -137,7 +137,7 @@ def preprocess_text_polars(text_series: pl.Series, keep_stopwords=True, keep_ori
 
             # Convert to lowercase before calling fix_common_word
             sent = sent.lower().strip()
-            #sent = fix_common_words.fix_common_word(sent)
+            sent = fix_common_words.fix_common_word(sent)
 
             # Tokenize words
             if keep_original:
