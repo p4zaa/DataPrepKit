@@ -159,6 +159,7 @@ def rename_encoded_columns(df: pl.DataFrame, column: str, separator: str = '_') 
         ValueError: If the `column` argument is not an encoded column.
     """
     assert isinstance(column, str)
+    
     # Get the list of encoded columns.
     start_str = f'{column}{separator}'
     encoded_columns = df.select([column for column in df.columns if column.startswith(start_str)]).columns
