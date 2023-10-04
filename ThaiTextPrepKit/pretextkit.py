@@ -1,5 +1,6 @@
 ####### Libraries ########
 import pandas as pd
+import polars as pl
 import numpy as np
 from tqdm import tqdm
 import re
