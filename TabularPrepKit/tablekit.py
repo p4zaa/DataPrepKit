@@ -125,13 +125,13 @@ def one_hot_encode_polars(df: pl.DataFrame, id_cols: str|list[str], column: str 
     """Encodes the specified columns in the given dataframe.
     
     Args:
-    df: The dataframe to encode.
-    id_cols: The columns to use as the grouping columns.
-    column: A column to encode.
-    separator: The separator to use when creating the one-hot encoded columns.
+        df: The dataframe to encode.
+        id_cols: The columns to use as the grouping columns.
+        column: A column to encode.
+        separator: The separator to use when creating the one-hot encoded columns.
     
     Returns:
-    A dataframe with the encoded columns.
+        A dataframe with the encoded columns.
     """
     q = (
       df
@@ -148,15 +148,15 @@ def rename_encoded_columns(df: pl.DataFrame, column: str, separator: str = '_') 
     """Renames the encoded columns in the given dataframe.
     
     Args:
-    df: The dataframe to rename the encoded columns in.
-    column: The name of the column that the encoded columns start with.
-    separator: The separator that is used between the column name and the encoded value.
+        df: The dataframe to rename the encoded columns in.
+        column: The name of the column that the encoded columns start with.
+        separator: The separator that is used between the column name and the encoded value.
     
     Returns:
-    A dataframe with the renamed encoded columns.
+        A dataframe with the renamed encoded columns.
     
     Raises:
-    ValueError: If the `column` argument is not an encoded column.
+        ValueError: If the `column` argument is not an encoded column.
     """
     assert isinstance(column, str)
     # Get the list of encoded columns.
