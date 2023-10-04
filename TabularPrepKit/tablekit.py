@@ -165,6 +165,6 @@ def rename_encoded_columns(df: pl.DataFrame, column: str, separator: str = '_') 
     
     # Rename the encoded columns.
     for column in encoded_columns:
-    df = df.rename({column: column.split(separator)[1]})
+        df = df.rename({column: column.split(separator)[1]})
     
     return df
