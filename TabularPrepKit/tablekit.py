@@ -81,7 +81,7 @@ def combine_labels_polars(df: pl.DataFrame, id_cols: list, label_cols: list, lab
             .with_columns(
                 pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x))).list.join('|').alias(alias_str),
             )\
-            .select(pl.col(id_cols + ['Combined Labels'])),
+            .select(pl.col(id_cols + [alias_str])),
             on=id_cols,
         )\
         .unique(
@@ -103,7 +103,7 @@ def combine_labels_polars(df: pl.DataFrame, id_cols: list, label_cols: list, lab
             .with_columns(
                 pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x))).alias(alias_str),
             )\
-            .select(pl.col(id_cols + ['Combined Labels'])),
+            .select(pl.col(id_cols + [alias_str])),
             on=id_cols,
         )\
         .unique(
