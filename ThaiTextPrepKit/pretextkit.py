@@ -111,8 +111,8 @@ def preprocess_text_polars(text_series: pl.Series, keep_stopwords: bool=True, ke
     if keep_original is not None and return_token_list is not None:
       raise ValueError("Only one of 'keep_original' and 'return_token_list' can be passed at a time.")
     elif keep_original is None and return_token_list is None:
-      #raise ValueError("Please specify value for 'keep_original' or 'return_token_list' both cannot be none type at a time.")
-      warnings.warn("'keep_original' will be default to None, please specify it value if needed in the futher.")
+      #raise ValueError("Please specify a value for 'keep_original' or 'return_token_list' both cannot be none type at a time.")
+      warnings.warn("'keep_original' will default to None, please specify its value if needed in the future.")
       keep_original = True
     elif not (keep_original is None or isinstance(keep_original, (bool))) and (return_token_list is None or isinstance(return_token_list, (bool))):
       raise ValueError("'keep_original' and 'return_token_list' only execpt none type or boolean.")
