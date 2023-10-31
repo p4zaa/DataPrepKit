@@ -105,7 +105,16 @@ def preprocess_text(text_list, keep_stopwords=True, keep_original=True):
 
 
 # For Polars >= 0.19.5 DataFrame
-def preprocess_text_polars(text_series: pl.Series, keep_stopwords=True, keep_original=True):
+def preprocess_text_polars(text_series: pl.Series, keep_stopwords: bool=True, keep_original: bool=None, return_token_list: bool=None):
+    
+    if keep_original is not None and return_token_list is not None:
+      raise ValueError("Only one of 'keep_original' and 'return_token_list' can be passed at a time.")
+    elif keep_original is None and return_token_list is None:
+      #raise ValueError("Please specify value for 'keep_original' or 'return_token_list' both cannot be none type at a time.")
+      warnings.warn("'keep_original' will be default to None, please specify it value if needed in the futher.")
+      keep_original = True
+    elif not (keep_original is None or isinstance(keep_original, (bool))) and (return_token_list is None or isinstance(return_token_list, (bool))):
+      raise ValueError("'keep_original' and 'return_token_list' only execpt none type or boolean.")
 
     preprocessed_texts = []
     url_pattern = re.compile(
@@ -118,7 +127,7 @@ def preprocess_text_polars(text_series: pl.Series, keep_stopwords=True, keep_ori
 
     for sentence in tqdm(text_series):
         if sentence is None:
-            preprocessed_texts.append('<_>')
+            preprocessed_texts.append(['<_>']) if return_token_list else preprocessed_texts.append('<_>')
             continue
         else:
             sentence = str(sentence)
@@ -153,10 +162,10 @@ def preprocess_text_polars(text_series: pl.Series, keep_stopwords=True, keep_ori
 
               sent = re.sub(r'(%)([ก-๙]+|[A-Za-z]+|[0-9]+)', r'\1 \2', sent)
 
-              tokens = word_tokenize(sent, keep_whitespace=True)
+              tokens = word_tokenize(sent, keep_whitespace=True, join_broken_num=True)
 
             else:
-              tokens = word_tokenize(sent, keep_whitespace=False)
+              tokens = word_tokenize(sent, keep_whitespace=False, join_broken_num=True)
 
             filtered_tokens = []
             for token in tokens:
@@ -171,13 +180,21 @@ def preprocess_text_polars(text_series: pl.Series, keep_stopwords=True, keep_ori
                     filtered_tokens.append(token)
                   else:
                     filtered_tokens.append(token)
-
+            
             # tokenize and remove stopwords
-            if keep_original:
-              sent = ''.join(e for e in filtered_tokens)
+            match keep_original:
+              case True:
+                sent = ''.join(e for e in filtered_tokens)
+              case False:
+                sent = ' '.join(e for e in filtered_tokens)
+              case None:
+                pass
+              case _:
+                raise ValueError("'keep_original' only execpt none type or boolean.")
+
+            if return_token_list:
+              preprocessed_texts.append(filtered_tokens)
             else:
-              sent = ' '.join(e for e in filtered_tokens)
+              preprocessed_texts.append(sent)
 
-            preprocessed_texts.append(sent)
-
-    return pl.Series(preprocessed_texts, dtype=pl.Utf8)
+    return pl.Series(preprocessed_texts) if return_token_list else pl.Series(preprocessed_texts, dtype=pl.Utf8)
