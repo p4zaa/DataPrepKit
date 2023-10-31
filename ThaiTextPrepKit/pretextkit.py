@@ -7,8 +7,9 @@ from tqdm import tqdm
 import re
 import pythainlp
 from pythainlp.util import normalize
-from pythainlp.corpus.common import thai_stopwords
+from pythainlp.corpus.common import thai_stopwords, thai_words
 from pythainlp.tokenize import word_tokenize
+from pythainlp.util.trie import Trie, dict_trie
 from ThaiTextPrepKit import __version__, fix_common_words
 
 ####### Functions ########
@@ -22,6 +23,11 @@ w_tokenizer = word_tokenize
 exclude_stopwords = []
 for word in exclude_stopwords:
     stopwords.remove(word)
+
+def get_thai_words_custom_dict(word_list: list):
+    custom_dict = set(thai_words())
+    custom_dict.update(word_list)
+    return custom_dict
 
 def preprocess_text(text_list, keep_stopwords=True, keep_original=True):
 
@@ -106,7 +112,7 @@ def preprocess_text(text_list, keep_stopwords=True, keep_original=True):
 
 
 # For Polars >= 0.19.5 DataFrame
-def preprocess_text_polars(text_series: pl.Series, keep_stopwords: bool=True, keep_original: bool=None, return_token_list: bool=None):
+def preprocess_text_polars(text_series: pl.Series, custom_dict=None, keep_stopwords: bool=True, keep_original: bool=None, return_token_list: bool=None):
     
     if keep_original is not None and return_token_list is not None:
       raise ValueError("Only one of 'keep_original' and 'return_token_list' can be passed at a time.")
@@ -126,6 +132,8 @@ def preprocess_text_polars(text_series: pl.Series, keep_stopwords: bool=True, ke
     thai_pattern = re.compile('[ก-๙]+')
     english_pattern = re.compile('[A-Za-z]+')
 
+    trie = dict_trie(dict_source=custom_dict) if custom_dict else None
+    
     for sentence in tqdm(text_series):
         if sentence is None:
             preprocessed_texts.append(['<_>']) if return_token_list else preprocessed_texts.append('<_>')
@@ -163,10 +171,10 @@ def preprocess_text_polars(text_series: pl.Series, keep_stopwords: bool=True, ke
 
               sent = re.sub(r'(%)([ก-๙]+|[A-Za-z]+|[0-9]+)', r'\1 \2', sent)
 
-              tokens = word_tokenize(sent, keep_whitespace=True, join_broken_num=True)
+              tokens = word_tokenize(sent, keep_whitespace=True, join_broken_num=True, custom_dict=trie)
 
             else:
-              tokens = word_tokenize(sent, keep_whitespace=False, join_broken_num=True)
+              tokens = word_tokenize(sent, keep_whitespace=False, join_broken_num=True, custom_dict=trie)
 
             filtered_tokens = []
             for token in tokens:
