@@ -10,7 +10,7 @@ setup(
         'pandas',
         'pythainlp',
         'tqdm',
-        'polars>=0.19.5',
+        'polars>=0.19.0',
         'xlsx2csv',
     ],
 )
