@@ -210,12 +210,12 @@ def preprocess_text_polars(text_series: pl.Series, custom_dict=None, keep_stopwo
 '''
 
 # For Polars >= 0.19.0 DataFrame
-def preprocess_text_polars(series: pl.Series, custom_dict=None, keep_stopwords: bool=True, keep_original: bool=True, return_token_list: bool=False):
+def preprocess_text_polars(series: pl.Series, custom_dict=None, keep_stopwords: bool=True, keep_format: bool=True, return_token_list: bool=False):
 
-    if not isinstance(keep_original, (bool)) or not isinstance(return_token_list, (bool)):
-      raise ValueError("'keep_original' and 'return_token_list' only execpt boolean.")
-    elif keep_original and return_token_list:
-      raise ValueError("Only one of 'keep_original' and 'return_token_list' can be passed at a time.")
+    if not isinstance(keep_format, (bool)) or not isinstance(return_token_list, (bool)):
+      raise ValueError("'keep_format' and 'return_token_list' only execpt boolean.")
+    elif keep_format and return_token_list:
+      raise ValueError("Only one of 'keep_format' and 'return_token_list' can be passed at a time.")
 
     trie = dict_trie(dict_source=custom_dict) if custom_dict else None
     
@@ -245,7 +245,7 @@ def preprocess_text_polars(series: pl.Series, custom_dict=None, keep_stopwords: 
       sent = fix_common_words.fix_common_word(sent)
 
       # Tokenize words
-      if keep_original:
+      if keep_format:
         # Insert spaces between English and Thai words
         sent = re.sub(r'([A-Za-z]+)([ก-๙]+)', r'\1 \2', sent)
         sent = re.sub(r'([ก-๙]+)([A-Za-z]+)', r'\1 \2', sent)
@@ -267,24 +267,24 @@ def preprocess_text_polars(series: pl.Series, custom_dict=None, keep_stopwords: 
       for token in tokens:
         match keep_stopwords:
           case False:
-            if token not in stopwords and len(token) > 1 and not keep_original:
+            if token not in stopwords and len(token) > 1 and not keep_format:
               filtered_tokens.append(token)
-            elif token not in stopwords and keep_original:
+            elif token not in stopwords and keep_format:
               filtered_tokens.append(token)
           case True:
-            if len(token) > 1 and not keep_original:
+            if len(token) > 1 and not keep_format:
               filtered_tokens.append(token)
             else:
               filtered_tokens.append(token)
 
       # tokenize and remove stopwords
-      match keep_original:
+      match keep_format:
         case True:
           sent = ''.join(e for e in filtered_tokens)
         case False:
           sent = ' '.join(e for e in filtered_tokens)
         case _:
-          raise ValueError("'keep_original' only execpt none type or boolean.")
+          raise ValueError("'keep_format' only execpt none type or boolean.")
 
       if return_token_list:
         return filtered_tokens
