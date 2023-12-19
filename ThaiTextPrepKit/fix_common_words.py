@@ -51,7 +51,7 @@ def fix_common_word(x):
     x = re.sub('()', '', x)
     x = re.sub('(เกณ|เกฑณ์|เกฑ์|เกณ์|เกณณ์|เกนณ[์|ื]*|เกนฑ[์|ื]*)', 'เกณฑ์', x)
     x = re.sub('(call center|callcenter|คอนเซ็นเตอร์|คอลเซนเตอ|คอลเซ็นเตอ|คอลเซลเตอ|คอลเซ็ลเตอ)', 'คอลเซ็นเตอร์', x)
-    x = re.sub(f'([ๆไใำ]ม[{vowel_typo}]*[ๆไใำ]ด[{vowel_typo}]*)|(มั[{vowel_typo}]*ย[ๆไใำ]ด[{vowel_typo}]*)|(มั[{vowel_typo}]*ยดั[{vowel_typo}]*ย)|(มั[{vowel_typo}]*ยด[{vowel_typo}]*าย)|(มั[{vowel_typo}]*ยดร[{vowel_typo}]*[า]*ย)|([ๆไใำ]ม[{vowel_typo}]*ด[{vowel_typo}]*าย)|([ๆไใำ]*ม[{vowel_typo}]*[ะ]*(ด[{vowel_typo}]*าย|ดร[{vowel_typo}]*[า]*ย|[ๆไใำ]ด[{vowel_typo}]*))|(บ่(ด[{vowel_typo}]*าย|ดร[{vowel_typo}]*[า]*ย|[ๆไใำ]ด[{vowel_typo}]*))', 'ไม่ได้', x)
+    x = re.sub(f'([ๆไใ]ม[{vowel_typo}]*[ๆไใำ]ด[{vowel_typo}]*)|(มั[{vowel_typo}]*ย[ๆไใำ]ด[{vowel_typo}]*)|(มั[{vowel_typo}]*ยดั[{vowel_typo}]*ย)|(มั[{vowel_typo}]*ยด[{vowel_typo}]*าย)|(มั[{vowel_typo}]*ยดร[{vowel_typo}]*[า]*ย)|([ๆไใ]ม[{vowel_typo}]*ด[{vowel_typo}]*าย)|(บ่(ด[{vowel_typo}]*าย|ดร[{vowel_typo}]*[า]*ย|[ๆไใำ]ด[{vowel_typo}]*))', 'ไม่ได้', x)
     x = re.sub(f'(ล[{vowel_typo}][า]*ช[{vowel_typo}]*[า]*)', 'ล่าช้า', x)
     x = re.sub(f'([โดเก]ค[ห]*[วสงย][ิื]*[{vowel_typo}]*[ดคตท]*[- ]*19)|(covid[ ]*19)', 'covid-19', x)
     x = re.sub(f'([ตคจ][{vowel_typo}]*[อิแ]*[{vowel_typo}]*[วง][กดห][่าส][รนี])', 'ต้องการ', x)
