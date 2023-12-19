@@ -217,7 +217,12 @@ def preprocess_text_polars(series: pl.Series, custom_dict=None, keep_stopwords: 
     elif keep_format and return_token_list:
       raise ValueError("Only one of 'keep_format' and 'return_token_list' can be passed at a time.")
 
-    trie = dict_trie(dict_source=custom_dict) if custom_dict else None
+    if custom_dict:
+        custom_words = set(thai_words())
+        custom_words.update(custom_dict)
+        trie = dict_trie(dict_source=custom_words)
+    else:
+        trie = None
     
     def preprocess(text, trie=trie):
       url_pattern = re.compile(
