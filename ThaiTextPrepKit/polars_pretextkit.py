@@ -22,7 +22,7 @@ exclude_stopwords = []
 for word in exclude_stopwords:
     stopwords.remove(word)
 
-def get_thai_words_custom_dict(word_list: list):
+def get_thai_words_with_custom_dict(word_list: list):
     custom_dict = set(thai_words())
     custom_dict.update(word_list)
     return custom_dict
@@ -35,12 +35,7 @@ def preprocess_text_batches(series: pl.Series, custom_dict=None, keep_stopwords:
     elif keep_format and return_token_list:
       raise ValueError("Only one of 'keep_format' and 'return_token_list' can be passed at a time.")
 
-    if custom_dict:
-        custom_words = set(thai_words())
-        custom_words.update(custom_dict)
-        trie = dict_trie(dict_source=custom_words)
-    else:
-        trie = None
+    trie = dict_trie(dict_source=get_thai_words_with_custom_dict(custom_dict)) if custom_dict else None
     
     def preprocess(text, trie=trie):
       url_pattern = re.compile(
