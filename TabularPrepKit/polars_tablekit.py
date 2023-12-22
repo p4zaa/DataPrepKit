@@ -2,7 +2,7 @@ import polars as pl
 import numpy as np
 from TabularPrepKit import helper_functions as helper
 
-def drop_duplicates_multilabel(df: pl.DataFrame, id_cols: list, label_cols: list = None, label_considering: bool = True, to_str: bool = False, alias_str: str = 'Combined Labels'):
+def drop_duplicates_multilabel(df: pl.DataFrame, id_cols: list, label_cols: list = None, label_considering: bool = True, to_str: bool = False, alias_str: str = 'decoded_label'):
     """Combines the labels for each row of a DataFrame into a single label.
 
     Args:
@@ -68,7 +68,7 @@ def drop_duplicates_multilabel(df: pl.DataFrame, id_cols: list, label_cols: list
 # Example usage:
 # combined_df = drop_duplicates_multilabel(your_dataframe, id_cols=['ID'], label_cols=['Label1', 'Label2'])
 
-def one_hot_encoder(df: pl.DataFrame, id_cols: str|list[str], column: str = 'Combined Labels', separator: str = '_', rename_encoded_cols: bool = False) -> pl.DataFrame:
+def one_hot_encoder(df: pl.DataFrame, id_cols: str|list[str], column: str = 'decoded_label', separator: str = '_', rename_encoded_cols: bool = False) -> pl.DataFrame:
     """Encodes the specified columns in the given dataframe.
     
     Args:
@@ -89,3 +89,13 @@ def one_hot_encoder(df: pl.DataFrame, id_cols: str|list[str], column: str = 'Com
     )
     
     return helper.rename_encoded_columns(q, column, separator) if rename_encoded_cols else q
+
+# Decoder procedures
+def one_hot_decoder(df: pl.DataFrame, labels, sep='|', alias='decoded_label'):
+  df = df.with_columns(
+      [pl.when(pl.col(label).is_in([1])).then(pl.lit(label)).otherwise(pl.lit(None)).alias(label) for label in labels]
+  ).with_columns(
+      [pl.concat_list(labels).list.drop_nulls().list.join(sep).alias(alias)]
+  )\
+  .drop(labels)
+  return df
