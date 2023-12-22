@@ -28,7 +28,7 @@ def get_thai_words_custom_dict(word_list: list):
     return custom_dict
 
 # For Polars >= 0.19.0 DataFrame
-def preprocess_text_polars(series: pl.Series, custom_dict=None, keep_stopwords: bool=True, keep_format: bool=True, return_token_list: bool=False):
+def preprocess_text_batches(series: pl.Series, custom_dict=None, keep_stopwords: bool=True, keep_format: bool=True, return_token_list: bool=False):
 
     if not isinstance(keep_format, (bool)) or not isinstance(return_token_list, (bool)):
       raise ValueError("'keep_format' and 'return_token_list' only execpt boolean.")
