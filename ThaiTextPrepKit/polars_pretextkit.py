@@ -8,6 +8,8 @@ from pythainlp.util import normalize
 from pythainlp.corpus.common import thai_stopwords, thai_words
 from pythainlp.tokenize import word_tokenize
 from pythainlp.util.trie import Trie, dict_trie
+from pythainlp.tag import NER
+
 from ThaiTextPrepKit import __version__, fix_common_words
 
 ####### Functions ########
@@ -27,17 +29,26 @@ def get_thai_words_with_custom_dict(word_list: list):
     custom_dict.update(word_list)
     return custom_dict
 
-# For Polars >= 0.19.0 DataFrame
-def preprocess_text_batches(series: pl.Series, custom_dict=None, keep_stopwords: bool=True, keep_format: bool=True, return_token_list: bool=False):
+def thai_ner_tagging(text, ner):
+    return ner.tag(text, tag=True)
 
-    if not isinstance(keep_format, (bool)) or not isinstance(return_token_list, (bool)):
-      raise ValueError("'keep_format' and 'return_token_list' only execpt boolean.")
-    elif keep_format and return_token_list:
+
+# For Polars >= 0.19.0 DataFrame
+def preprocess_text_batches(series: pl.Series, 
+                            custom_dict=None, 
+                            keep_stopwords: bool=True, 
+                            keep_format: bool=True, 
+                            return_token_list: bool=False, 
+                            **kwargs):
+    if keep_format and return_token_list:
       raise ValueError("Only one of 'keep_format' and 'return_token_list' can be passed at a time.")
 
     trie = dict_trie(dict_source=get_thai_words_with_custom_dict(custom_dict)) if custom_dict else None
-    
-    def preprocess(text, trie=trie):
+
+    if kwargs.get('ner'):
+      ner = NER("thainer")
+
+    def preprocess(text, trie=trie, **kwargs):
       url_pattern = re.compile(
           'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
       tag_pattern = re.compile(
@@ -62,6 +73,15 @@ def preprocess_text_batches(series: pl.Series, custom_dict=None, keep_stopwords:
       sent = sent.lower().strip()
       sent = fix_common_words.fix_common_word(sent)
 
+      # Tagging
+      if kwargs.get('ner'):
+        sent = thai_ner_tagging(text=sent, ner=ner)
+        person_tag_pattern = r"<PERSON>(.*?)</PERSON>"
+        ner_tag_pattern = r"<\/?[A-Z]+>"
+        sent = re.sub(person_tag_pattern, '', sent)
+        sent = re.sub(ner_tag_pattern, '', sent)
+        sent = sent.strip()
+
       # Tokenize words
       if keep_format:
         # Insert spaces between English and Thai words
@@ -83,30 +103,45 @@ def preprocess_text_batches(series: pl.Series, custom_dict=None, keep_stopwords:
 
       filtered_tokens = []
       for token in tokens:
-        match keep_stopwords:
-          case False:
-            if token not in stopwords and len(token) > 1 and not keep_format:
-              filtered_tokens.append(token)
-            elif token not in stopwords and keep_format:
-              filtered_tokens.append(token)
-          case True:
-            if len(token) > 1 and not keep_format:
-              filtered_tokens.append(token)
-            else:
-              filtered_tokens.append(token)
+        if keep_stopwords:
+          if len(token) > 1 and not keep_format:
+            filtered_tokens.append(token)
+          else:
+            filtered_tokens.append(token)
+        
+        else:
+          if token not in stopwords and len(token) > 1 and not keep_format:
+            filtered_tokens.append(token)
+          elif token not in stopwords and keep_format:
+            filtered_tokens.append(token)
 
       # tokenize and remove stopwords
-      match keep_format:
-        case True:
-          sent = ''.join(e for e in filtered_tokens)
-        case False:
-          sent = ' '.join(e for e in filtered_tokens)
-        case _:
-          raise ValueError("'keep_format' only execpt none type or boolean.")
+      if keep_format:
+        sent = ''.join(e for e in filtered_tokens)
+      else:
+        sent = ' '.join(e for e in filtered_tokens)
 
       if return_token_list:
         return filtered_tokens
       else:
         return sent
 
-    return series.map_elements(preprocess)
+    return series.map_elements(lambda text: preprocess(text=text, trie=trie, **kwargs))
+
+def thai_text_preprocessing(df, 
+                            input_col, 
+                            output_col, 
+                            custom_dict=None, 
+                            keep_stopwords: bool=True, 
+                            keep_format: bool=True, 
+                            return_token_list: bool=False, 
+                            **kwargs):
+  df = df.with_columns(
+      pl.col(input_col).map_batches(lambda series: preprocess_text_batches(series, 
+                                                                           custom_dict=custom_dict, 
+                                                                           keep_stopwords=keep_stopwords, 
+                                                                           keep_format=keep_format,
+                                                                           return_token_list=return_token_list,
+                                                                           kwargs=kwargs)).alias(output_col)
+      )
+  return df
