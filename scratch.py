@@ -5,11 +5,18 @@ import re
 df = pl.read_csv('tests/spam_A_train.csv').sample(100)
 texts = df.get_column('text').to_list()
 
-#print(df.pipe(pretextkit.thai_text_preprocessing, input_col='text', output_col='pre_text', keep_stopwords=True, keep_format=True, return_token_list=False))
+df = df.pipe(pretextkit.thai_text_preprocessing, 
+        input_col='text', 
+        output_col='pre_text', 
+        keep_stopwords=True, 
+        keep_format=True, 
+        return_token_list=False)
+
+df.write_csv('test_ner.csv')
 
 test_texts = ['สนใจตัว happy savings แต่เงื่อนไขค่อนข้างยุ่งยากพอสมควร ต้องฝากเป็นเงินสดโอนเงินเข้าไม่ได้ ถ้าถอนก่อนกำหนดต้องไปที่ธ.สาขาที่เปิดบัญชีเท่านั้น ไม่สามารถทะยอยฝากได้ต้องฝากเป็นก้อนเดียวตอนเปิดบัญชี',
               'วัฒนชัย วายร้าย แอปนี้โอนเงินบัญชีออมทรัพย์ไปบัญชีฝากประจำได้ไหมครับธนาคารกสิกรไทย']
-print(pretextkit.preprocess_text_batches(pl.Series(test_texts), ner=True)[1])
+#print(pretextkit.preprocess_text_batches(pl.Series(test_texts), ner=True))
 
 from pythainlp.spell import correct, correct_sent
 from pythainlp.tokenize import word_tokenize
