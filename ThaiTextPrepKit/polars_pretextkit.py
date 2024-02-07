@@ -45,7 +45,7 @@ def preprocess_text_batches(series: pl.Series,
 
     trie = dict_trie(dict_source=get_thai_words_with_custom_dict(custom_dict)) if custom_dict else None
 
-    if kwargs.get('ner'):
+    if kwargs.get('ner_options'):
       ner = NER("thainer")
 
     def preprocess(text, trie=trie, **kwargs):
@@ -55,6 +55,7 @@ def preprocess_text_batches(series: pl.Series,
           '@(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
       thai_pattern = re.compile('[ก-๙]+')
       english_pattern = re.compile('[A-Za-z]+')
+      ner_options = kwargs.get('ner_options')
 
       text = str(text)
       sent = url_pattern.sub('', text)
@@ -74,13 +75,16 @@ def preprocess_text_batches(series: pl.Series,
       sent = fix_common_words.fix_common_word(sent)
 
       # Tagging
-      if kwargs.get('ner'):
+      if ner_options:
         sent = thai_ner_tagging(text=sent, ner=ner)
         person_tag_pattern = r"<PERSON>(.*?)</PERSON>"
         ner_tag_pattern = r"<\/?[A-Z]+>"
-        sent = re.sub(person_tag_pattern, '', sent)
-        sent = re.sub(ner_tag_pattern, '', sent)
-        sent = sent.strip()
+        if ner_options.get('keep_tag'):
+          pass
+        else:
+          sent = re.sub(person_tag_pattern, '', sent)
+          sent = re.sub(ner_tag_pattern, '', sent)
+          sent = sent.strip()
 
       # Tokenize words
       if keep_format:
@@ -142,6 +146,6 @@ def thai_text_preprocessing(df,
                                                                            keep_stopwords=keep_stopwords, 
                                                                            keep_format=keep_format,
                                                                            return_token_list=return_token_list,
-                                                                           kwargs=kwargs)).alias(output_col)
+                                                                           **kwargs)).alias(output_col)
       )
   return df
