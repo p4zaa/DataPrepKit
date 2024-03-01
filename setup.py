@@ -7,7 +7,6 @@ setup(
     packages=find_packages(),
     install_requires=[
         'numpy',
-        'pandas',
         'pythainlp',
         'tqdm',
         'polars>=0.19.0',
