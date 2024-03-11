@@ -83,26 +83,23 @@ def preprocess_text_batches(series: pl.Series, custom_dict=None, keep_stopwords:
 
       filtered_tokens = []
       for token in tokens:
-        match keep_stopwords:
-          case False:
-            if token not in stopwords and len(token) > 1 and not keep_format:
-              filtered_tokens.append(token)
-            elif token not in stopwords and keep_format:
-              filtered_tokens.append(token)
-          case True:
-            if len(token) > 1 and not keep_format:
-              filtered_tokens.append(token)
-            else:
-              filtered_tokens.append(token)
+        if keep_stopwords:
+          if len(token) > 1 and not keep_format:
+            filtered_tokens.append(token)
+          else:
+            filtered_tokens.append(token)
+        
+        else:
+          if token not in stopwords and len(token) > 1 and not keep_format:
+            filtered_tokens.append(token)
+          elif token not in stopwords and keep_format:
+            filtered_tokens.append(token)
 
       # tokenize and remove stopwords
-      match keep_format:
-        case True:
-          sent = ''.join(e for e in filtered_tokens)
-        case False:
-          sent = ' '.join(e for e in filtered_tokens)
-        case _:
-          raise ValueError("'keep_format' only execpt none type or boolean.")
+      if keep_format:
+        sent = ''.join(e for e in filtered_tokens)
+      else:
+        sent = ' '.join(e for e in filtered_tokens)
 
       if return_token_list:
         return filtered_tokens
