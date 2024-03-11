@@ -68,7 +68,7 @@ def drop_duplicates_multilabel(df: pl.DataFrame, id_cols: list, label_cols: list
 # Example usage:
 # combined_df = drop_duplicates_multilabel(your_dataframe, id_cols=['ID'], label_cols=['Label1', 'Label2'])
 
-def one_hot_encoder(df: pl.DataFrame, id_cols: str|list[str], column: str = 'decoded_label', separator: str = '_', rename_encoded_cols: bool = False) -> pl.DataFrame:
+def one_hot_encoder(df: pl.DataFrame, id_cols: list[str], column: str = 'decoded_label', separator: str = '_', rename_encoded_cols: bool = False) -> pl.DataFrame:
     """Encodes the specified columns in the given dataframe.
     
     Args:
