@@ -14,7 +14,7 @@ df = df.with_columns(
     pl.col('text_column')\
     .map_batches(lambda text: preprocess.preprocess_text_polars(series=text,
                                                       keep_stopwords=False,
-                                                      keep_original=True,
+                                                      keep_format=True,
                                                       return_token_list=Fasle))\
     .alias('preprocessed_text')
 )
