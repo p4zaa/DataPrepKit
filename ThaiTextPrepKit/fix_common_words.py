@@ -1,10 +1,16 @@
 import re
 from ThaiTextPrepKit import __version__, vowel_typo
+thai_consonants = "กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮ"
+thai_tonemarks = (
+"""
+\u0e47\u0e48\u0e49\u0e4a\u0e4b\u0e4c\u0e4d\u0e4e
+"""
+)
 
 def fix_common_word(x):
     #vowel_typo = '่้๊๋็ีัเ' # ่ ้ ๊ ๋ ็ ี ั เ
     x = re.sub('(ๅ)', 'า', x)
-    x = re.sub(rf'(แอ[พปฟผ]*[พปฟผ]*ลิเคช[ัี]*[{vowel_typo}]น)|(แอ[{vowel_typo}]*[พปฟผฯ][ฯ]*(?!เปิ[{vowel_typo}]*ล))|(aplication|application|\bapp(?![A-Za-z]))', 'แอปพลิเคชัน', x)
+    x = re.sub(rf'(แอ[พปฟผ]*[พปฟผ]*ลิเคช[ัี]*[{vowel_typo}]น)|(แอ[{vowel_typo}]*[พปฟผฯ][ฯ]*(?!เปิ[{vowel_typo}]*ล))|(aplication|application|(?<=[{thai_consonants} ])app(?![A-Za-z]))', 'แอปพลิเคชัน', x)
     x = re.sub(f'([เแ]อ[{vowel_typo}]*[ปผแบยลำพะฟห][เด้][ปบผ][ิฺอื]*[ลน])', 'แอปเปิ้ล', x)
     x = re.sub('(scan|แสกน)', 'สแกน', x)
     x = re.sub('(time)', 'เวลา', x)
@@ -45,13 +51,13 @@ def fix_common_word(x):
     x = re.sub('(เร้ว|ดร็ว|ดรว|เรว)', 'เร็ว', x)
     x = re.sub('(อย่างง(?!ง))', 'อย่าง', x)
     x = re.sub('(งง+)', 'งง', x)
-    x = re.sub('(บริ[กด][ารส่]*[รนฯยญณ])', 'บริการ', x)
+    x = re.sub('(บริ[กด][าส][า]*[นรฯยญณ])', 'บริการ', x)
     x = re.sub('(เหตการ|เหตการณ์)', 'เหตุการณ์', x)
     #x = re.sub('(การ|ผม|คับ|ครับ|ค่ะ|ที่|ก็|ก้|ก้อ|โดย|ด้วย|ใน|เป็น|นะ|ฯลฯ)', '', x)
     x = re.sub('(มาก+)', 'มาก', x)
     x = re.sub('()', '', x)
     x = re.sub('(เกณ|เกฑณ์|เกฑ์|เกณ์|เกณณ์|เกนณ[์|ื]*|เกนฑ[์|ื]*)', 'เกณฑ์', x)
-    x = re.sub('(call center|callcenter|คอนเซ็นเตอร์|คอลเซนเตอ|คอลเซ็นเตอ|คอลเซลเตอ|คอลเซ็ลเตอ)', 'คอลเซ็นเตอร์', x)
+    x = re.sub(f'(cal[l]*[ ]*center)|(คอ[นล]เซ[{thai_tonemarks}]*[นลยบญรฯ]เต[{thai_tonemarks}]*อ(ร[{thai_tonemarks}]*)*)', 'คอลเซ็นเตอร์', x)
     x = re.sub(f'([ๆไใ]ม[{vowel_typo}]*[ๆไใำ]ด[{vowel_typo}]*)|(มั[{vowel_typo}]*ย[ๆไใำ]ด[{vowel_typo}]*)|(มั[{vowel_typo}]*ยดั[{vowel_typo}]*ย)|(มั[{vowel_typo}]*ยด[{vowel_typo}]*าย)|(มั[{vowel_typo}]*ยดร[{vowel_typo}]*[า]*ย)|([ๆไใ]ม[{vowel_typo}]*ด[{vowel_typo}]*าย)|(บ่(ด[{vowel_typo}]*าย|ดร[{vowel_typo}]*[า]*ย|[ๆไใำ]ด[{vowel_typo}]*))', 'ไม่ได้', x)
     x = re.sub(f'(ล[{vowel_typo}][า]*ช[{vowel_typo}]*[า]*)', 'ล่าช้า', x)
     x = re.sub(f'([โดเก]ค[ห]*[วสงย][ิื]*[{vowel_typo}]*[ดคตท]*[- ]*19)|(covid[ ]*19)', 'covid-19', x)
