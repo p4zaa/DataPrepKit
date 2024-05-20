@@ -60,6 +60,7 @@ def fix_common_word(x):
     x = re.sub(f'([โดเก]ค[ห]*[วสงย][ิื]*[{vowel_typo}]*[ดคตท]*[- ]*19)|(covid[ ]*19)', 'covid-19', x)
     x = re.sub(f'([ตคจ][{vowel_typo}]*[อิแ]*[{vowel_typo}]*[วง][กดห][่าส][รนี])', 'ต้องการ', x)
     x = re.sub(f'จ[.]*น[.]*ท[.]', 'เจ้าหน้าที่', x)
+    x = re.sub(f'[ส]*[ะ]*เ(ส[ี]*)*ถ[ี]*ย[รนยณญ]', 'เสถียร', x)
     x = re.sub(f'(&nbsp;)', '', x)
     x = re.sub(r'(?<=\S)\.(?=\s|$)', '', x) # remove the full stop mark at the end of a sentence
     return x
