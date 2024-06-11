@@ -10,7 +10,7 @@ thai_tonemarks = (
 def fix_common_word(x):
     #vowel_typo = '่้๊๋็ีัเ' # ่ ้ ๊ ๋ ็ ี ั เ
     x = re.sub('(ๅ)', 'า', x)
-    x = re.sub(rf'(แอ[พปฟผ]*[พปฟผ]*ลิเคช[ัี]*[{vowel_typo}]น)|(แอ[{vowel_typo}]*[พปฟผฯ][ฯ]*(?!เปิ[{vowel_typo}]*ล))|(aplication|application|(?<=[{thai_consonants} ])app(?![A-Za-z]))', 'แอปพลิเคชัน', x)
+    x = re.sub(rf'(แอ๊บ)|(แอ[พปฟผ]*[พปฟผ]*ลิเคช[ัี]*[{vowel_typo}]น)|(แอ[{vowel_typo}]*[พปฟผฯ][ฯ]*(?!เปิ[{vowel_typo}]*ล))|(aplication|application|(?<=[{thai_consonants} ])app(?![A-Za-z]))', 'แอปพลิเคชัน', x)
     x = re.sub(f'([เแ]อ[{thai_tonemarks}]*[ปผแบยลำพะฟห][เด้][ปบผ][ิฺอื]*[ลน])', 'แอปเปิ้ล', x)
     x = re.sub('(scan|แสกน)', 'สแกน', x)
     x = re.sub('(time)', 'เวลา', x)
@@ -62,6 +62,8 @@ def fix_common_word(x):
     x = re.sub(f'จ[.]*น[.]*ท[.]', 'เจ้าหน้าที่', x)
     x = re.sub(f'[ส]*[ะ]*เ(ส[ี]*)*ถ[ี]*ย[รนยณญ]', 'เสถียร', x)
     x = re.sub(f'((กรุงไท[ย]*)เน[{thai_tonemarks}]*[กหดป])', 'กรุงไทยเน็กซ์', x)
+    #x = re.sub(f'(แบ[{thai_tonemarks}]*ง)[กค][์]', 'ธนาคาร', x)
+    x = re.sub(f'(แบ[{thai_tonemarks}]*ง)[กค][์]', 'แบงก์', x)
     x = re.sub(f'(&nbsp;)', '', x)
     x = re.sub(r'(?<=\S)\.(?=\s|$)', '', x) # remove the full stop mark at the end of a sentence
     return x
