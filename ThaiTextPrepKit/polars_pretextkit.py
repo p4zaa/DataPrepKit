@@ -39,6 +39,8 @@ def preprocess_text_batches(series: pl.Series,
                             keep_stopwords: bool=True, 
                             keep_format: bool=True, 
                             return_token_list: bool=False, 
+                            lower_case: bool=True,
+                            include_pattern: str='',
                             **kwargs):
     if keep_format and return_token_list:
       raise ValueError("Only one of 'keep_format' and 'return_token_list' can be passed at a time.")
@@ -68,10 +70,11 @@ def preprocess_text_batches(series: pl.Series,
       sent = normalize_word(sent)
 
       # include Thai characters in regex pattern
-      sent = re.sub('[^A-Za-z0-9ก-๙,-.%]+', ' ', sent) # Drop any character that not specify in this pattern
+      pattern = rf'[^A-Za-z0-9ก-๙{include_pattern},-.\%]+'
+      sent = re.sub(pattern, ' ', sent) # Drop any character that not specify in this pattern
 
       # Convert to lowercase before calling fix_common_word
-      sent = sent.lower().strip()
+      sent = sent.lower().strip() if lower_case else sent.strip()
       sent = fix_common_words.fix_common_word(sent)
 
       # Tagging
