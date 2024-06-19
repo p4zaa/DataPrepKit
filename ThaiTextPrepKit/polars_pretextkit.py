@@ -10,7 +10,7 @@ from pythainlp.tokenize import word_tokenize
 from pythainlp.util.trie import Trie, dict_trie
 from pythainlp.tag import NER
 
-from ThaiTextPrepKit import __version__, fix_common_words
+from ThaiTextPrepKit import __version__, typo_patterns
 
 ####### Functions ########
 def normalize_word(sentence):
@@ -32,6 +32,10 @@ def get_thai_words_with_custom_dict(word_list: list):
 def thai_ner_tagging(text, ner):
     return ner.tag(text, tag=True)
 
+def fix_common_word(sentence):
+    for pattern, replacement in typo_patterns.patterns:
+        sentence = pattern.sub(replacement, sentence)
+    return sentence
 
 # For Polars >= 0.19.0 DataFrame
 def preprocess_text_batches(series: pl.Series, 
@@ -74,8 +78,9 @@ def preprocess_text_batches(series: pl.Series,
       sent = re.sub(pattern, ' ', sent) # Drop any character that not specify in this pattern
 
       # Convert to lowercase before calling fix_common_word
-      sent = sent.lower().strip() if lower_case else sent.strip()
-      sent = fix_common_words.fix_common_word(sent)
+      sent = fix_common_word(sent.strip())
+      #sent = fix_common_words.fix_common_word(sent)
+      sent = sent.lower() if lower_case else sent
 
       # Tagging
       if ner_options:
