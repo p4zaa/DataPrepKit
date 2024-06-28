@@ -25,7 +25,7 @@ thai_complete_end_vowels = (
 # Precompile regular expressions with the IGNORECASE flag
 general_patterns = [
     (re.compile(rf'(ๅ)', re.IGNORECASE), 'า'),
-    (re.compile(rf'(แอ๊บ)|(แอ[พปฟผ]*[พปฟผ]*ลิเคช[ัี]*[่้๊๋็ีัเ]น)|(แอ[่้๊๋็ีัเ]*[พปฟผฯ][ฯ]*(?!เปิ[่้๊๋็ีัเ]*ล))|ap[p]*lication|(?<![A-Za-z])app(?![A-Za-z])', re.IGNORECASE), 'แอปพลิเคชัน'),
+    (re.compile(rf'(แอ[{thai_tonemarks}]บ)|(แอ[พปฟผ]*[พปฟผ]*ลิเคช[ัี]*[่้๊๋็ีัเ]น)|(แอ[่้๊๋็ีัเ]*[พปฟผฯ][ฯ]*(?!เปิ[่้๊๋็ีัเ]*ล))|ap[p]*lication|(?<![A-Za-z])app(?![A-Za-z])', re.IGNORECASE), 'แอปพลิเคชัน'),
     (re.compile(rf'(?<![A-Za-z])apple(?![A-Za-z])|([เแ]อ[่้๊๋็ีัเ]*[ปผแบยลำพะฟห][เด้][ปบผ][ิฺอื]*[ลน])', re.IGNORECASE), 'แอปเปิ้ล'),
     (re.compile(rf'(scan|แสกน)', re.IGNORECASE), 'สแกน'),
     (re.compile(rf'(real[ -]*time)|(เรียล[ไใ]*[ทธ][า]*ม[{thanthakhat}]*)', re.IGNORECASE), 'realtime'),
@@ -48,7 +48,9 @@ general_patterns = [
     (re.compile(rf'(ร[ะ]*[ฟหก][ัะีํ๊]ส)', re.IGNORECASE), 'รหัส'),
     (re.compile(rf'(\bpin(?![A-Za-z])|พิ[นณฯ](?!า))|(pwd|pas[s]*w[opi]rd)|(ร[ะ]*[ฟหกฆ][{vowel_typo}]*[าสว][ฟผป][{vowel_typo}][รนยฯ])|([พภ]า[ร]*[์]*[สดทต][เด้]ว[ิื]*[อ]*[ร]*[์ื]*[กดเตท])', re.IGNORECASE), 'รหัสผ่าน'),
     (re.compile(rf'(อัต[ิ]*โนมัต[ิ]*)', re.IGNORECASE), 'อัตโนมัติ'),
+
     (re.compile(rf'(เบอ[ร]*[์]*โท[ร]*[สศ]ั[พบ][ท]*[์]*)|(เบอ[ร์]*โท[ร]*)|(เบอ(?!ะ)[ร]*[์]*)', re.IGNORECASE), 'หมายเลขโทรศัพท์'),
+
     (re.compile(rf'(ไช้)', re.IGNORECASE), 'ใช้'),
     (re.compile(rf'(ไช่)', re.IGNORECASE), 'ใช่'),
     (re.compile(rf'(รุ้)', re.IGNORECASE), 'รู้'),
@@ -63,7 +65,7 @@ general_patterns = [
     #(re.compile(rf'(อัพเดท|อัพเดต|อัปเดท|อัปเกรด|update|upgrade)', re.IGNORECASE), 'อัปเดต'),
     (re.compile(rf'(update|อั[{thai_tonemarks}]*[ปพบลยผแ]เด[ตดกทมคจ])', re.IGNORECASE), 'อัปเดต'),
     (re.compile(rf'(upgra[dt]e|อั[{thai_tonemarks}]*[ปพบลยผแ]เก[ร]*[ตดกทมคจ])', re.IGNORECASE), 'อัพเกรด'),
-    (re.compile(rf'(สะดวด|สดวก|สดวด|สกวก|สะกวก|สพกวก|สพดวก|convenient|convenience)', re.IGNORECASE), 'สะดวก'),
+    (re.compile(rf'(สะดวด|สดวก|สดวด|สกวก|สะกวก|สพกวก|สพดวก|สะ[วกด][วกด]ก|convenient|convenience)', re.IGNORECASE), 'สะดวก'),
     (re.compile(rf'(login|log-in|ล็อคอิน|ล็อกอิน|ลอกอิน|ล้อกอิน|ลอคอิน|ล้อคอิน)', re.IGNORECASE), 'เข้าใช้งาน'),
     (re.compile(rf'(ลวดเร็ว|ลวดเล็ว|รวดเล็ว|ดรดเร็ว|รวดเรว|รวดดร็ว|รวดเร้ว|fast|พรวดเร็ว)|เ[ลร][{vowel_typo}]*[กดเ]*[กดเ][ลร][{vowel_typo}]*[วด]|([พ]*[พรล]ว[เด้]*[แเด้][รล][{vowel_typo}]*[วด])', re.IGNORECASE), 'รวดเร็ว'),
     (re.compile(rf'(เร้ว|ดร็ว|ดรว|เรว)', re.IGNORECASE), 'เร็ว'),
@@ -71,9 +73,9 @@ general_patterns = [
     (re.compile(rf'(งง+)', re.IGNORECASE), 'งง'),
     (re.compile(rf'(บริ[กด][าส][า]*[นรฯยญณ])', re.IGNORECASE), 'บริการ'),
     (re.compile(rf'(เหตการ|เหตการณ์)', re.IGNORECASE), 'เหตุการณ์'),
-    (re.compile(rf'(มาก+)', re.IGNORECASE), 'มาก'),
+    (re.compile(rf'มา[ก]+(?!ว่า)', re.IGNORECASE), 'มาก'),
     (re.compile(rf'เก[ณ]([ฑพทฐ][{thanthakhat}])*|เก[รญนฯ]*([ฑพทฐ][{thanthakhat}])', re.IGNORECASE), 'เกณฑ์'),
-    (re.compile(rf'(cal[l]*[ ]*center)|(คอ[นล]เซ[{thai_tonemarks}]*[นลยบญรฯ]เต[{thai_tonemarks}]*อ(ร[{thai_tonemarks}])*)', re.IGNORECASE), 'คอลเซ็นเตอร์'),
+    (re.compile(rf'(cal[l]*[ ]*center)|(คอ[นลบ]เซ[{thai_tonemarks}]*[นลยบญรฯ]เต[{thai_tonemarks}]*อ(ร[{thai_tonemarks}])*)', re.IGNORECASE), 'คอลเซ็นเตอร์'),
     (re.compile(rf'([ๆไใ]ม[{vowel_typo}]*[ๆไใำ]ด[{vowel_typo}]*)|(มั[{vowel_typo}]*ย[ๆไใำ]ด[{vowel_typo}]*)|(มั[{vowel_typo}]*ยดั[{vowel_typo}]*ย)|(มั[{vowel_typo}]*ยด[{vowel_typo}]*าย)|(มั[{vowel_typo}]*ยดร[{vowel_typo}]*[า]*ย)|([ๆไใ]ม[{vowel_typo}]*ด[{vowel_typo}]*าย)|(บ่(ด[{vowel_typo}]*าย|ดร[{vowel_typo}]*[า]*ย|[ๆไใำ]ด[{vowel_typo}]*))', re.IGNORECASE), 'ไม่ได้'),
     (re.compile(rf'(ล[{thai_tonemarks}]าช[{thai_tonemarks}]*[า])', re.IGNORECASE), 'ล่าช้า'),
     (re.compile(rf'([โดเก]ค[ห]*[วสงย][ิื]*[{vowel_typo}]*[ดคตท]*[- ]*19)|(covid[ ]*19)', re.IGNORECASE), 'covid-19'),
@@ -81,12 +83,12 @@ general_patterns = [
     (re.compile(rf'จ[.]*น[.]*ท[.]', re.IGNORECASE), 'เจ้าหน้าที่'),
     (re.compile(rf'[ส]*[ะ]*เ(ส[ี]*)*ถ[ี]*ย[รนยณญ]', re.IGNORECASE), 'เสถียร'),
     #(re.compile(rf'(แบ[{thai_tonemarks}]*ง)[กค][์]', re.IGNORECASE), 'ธนาคาร'),
-    (re.compile(rf'(แบ[{thai_tonemarks}]*ง)[กค][์]', re.IGNORECASE), 'แบงก์'),
+    (re.compile(rf'(แบ[{thai_tonemarks}]*ง)[กค][์ื]', re.IGNORECASE), 'แบงก์'),
 
     # New in 1.1d
     # Only support with 'ลาย___' only
     (re.compile(rf'(ล[าสษ]ย)เ[ซวง][{thai_tonemarks}]*[นฯณญยร]([ตค][{thanthakhat}])*', re.IGNORECASE), 'ลายเซ็น'),
-    (re.compile(rf'เซ็[นฯณญยร]([ตค][{thanthakhat}])*', re.IGNORECASE), 'เซ็น'),
+    (re.compile(rf'เซ[{thai_tonemarks}]*[นฯณญยร]([ตค][{thanthakhat}])*', re.IGNORECASE), 'เซ็น'),
     (re.compile(rf'คั[สดศษซตจช]([โ]*([ทตค][อ]*[ม]*))*เมอ[รสต{thanthakhat}]*เซอ[รสต{thanthakhat}]*[ห]*วิ[สวศซษตดช]', re.IGNORECASE), 'Customer Service'),
     (re.compile(rf'ซั[บปฟพฑ]พ(อ(ร[{thanthakhat}]*)*)*[ตดส]', re.IGNORECASE), 'ซัพพอร์ต'),
     (re.compile(rf'ค่า[ธะทพฑ]*ร[ร]*มเนียม', re.IGNORECASE), 'ค่าธรรมเนียม'),
@@ -97,6 +99,22 @@ general_patterns = [
     (re.compile(rf'upload|อั[{thai_tonemarks}]*[พปบฟ][โด][ห]*ลด', re.IGNORECASE), 'อัปโหลด'),
     (re.compile(rf'counter|เค[{thai_tonemarks}]*า([นทต][{thanthakhat}]*)*เ[ตท]อร์', re.IGNORECASE), 'เคาน์เตอร์'),
     (re.compile(rf'อัต[ร]*[า]|อัตร[า]*', re.IGNORECASE), 'อัตรา'),
+
+    # New in 1.2b
+    (re.compile(rf'[หกฟ]ัวหน้า', re.IGNORECASE), 'หัวหน้า'),
+    (re.compile(rf'โอนจ่า[ยบน]*', re.IGNORECASE), 'โอนจ่าย'),
+    (re.compile(rf'เซ[{thai_tonemarks}]นเตอร์', re.IGNORECASE), 'เซ็นเตอร์'),
+    (re.compile(rf'เรื่[อ]+ง', re.IGNORECASE), 'เรื่อง'),
+    (re.compile(rf'อีเม[ล]+[{thanthakhat}]*', re.IGNORECASE), 'อีเมล'),
+    (re.compile(rf'ประส[า]*น[า]*งาน', re.IGNORECASE), 'ประสานงาน'),
+    (re.compile(rf'ย[อิแ]ดเงิน', re.IGNORECASE), 'ยอดเงิน'),
+    (re.compile(rf'ตอ[บ]*คำถาม', re.IGNORECASE), 'ตอบคำถาม'),
+    (re.compile(rf'[เด{thai_tonemarks}]สาร์', re.IGNORECASE), 'เสาร์'),
+    (re.compile(rf'เก่งมา[กดห]', re.IGNORECASE), 'เก่งมาก'),
+    (re.compile(rf'หลักทร[ท]*[ั]*พย์', re.IGNORECASE), 'หลักทรัพย์'),
+    (re.compile(rf'แม[น]*[{thai_tonemarks}]*ว[ลนยฯ]', re.IGNORECASE), 'แมนนวล'),
+    (re.compile(rf'เ[บล]ือก', re.IGNORECASE), 'เลือก'),
+    (re.compile(rf'เปเปอ[ร]*[{thanthakhat}]*', re.IGNORECASE), 'กระดาษ'),
 
     # Base end
     #(re.compile(rf'()', re.IGNORECASE), ''),
@@ -114,6 +132,13 @@ product_name_pattern = [
 spec_general_patterns = [
     (re.compile(rf'internet (b(an|na)[gk]*ing)', re.IGNORECASE), 'Internet Banking'),
     (re.compile(rf'(?<!scb business\s)(?<!ba(?:ht|th))(?<!ba(?:ht|th)\s)((inter)*net)(?!\sb(an|na)king)|(อิ[น]*[เ]*[ทต]อ[ร]*[ื์]*)เ[นฯณรยญ][{vowel_typo}]*[ตจคดกทมน]|([อแิ][อิืฺ์ี]*[รนณฯญย][ดเ้][ทตมคจ][{vowel_typo}][แอิ]*[ร]*[ื์]*[รณนฯย]*[ดเ้][รณนฯย][{vowel_typo}]*[คตจทม๖?]*[คตจทม๖?{vowel_typo}]*[คตจทม๖?{vowel_typo}]*)|(?<!บา[ทมธต]\s)(?<!บา[ทมธต])(เน[{vowel_typo}]*[ตท?๖][ื์]*[ตท?๖]*[ื์]*)', re.IGNORECASE), 'อินเทอร์เน็ต'),
+    (re.compile(rf'[ท]*ันสมัย', re.IGNORECASE), 'ทันสมัย'),
 ]
 
-patterns = general_patterns + product_name_pattern + spec_general_patterns
+corp_patterns = [
+    (re.compile(rf'เ[รล][ทต]', re.IGNORECASE), 'เรท'),
+    (re.compile(rf'เว[ฟปผ]', re.IGNORECASE), 'เวฟ'),
+    (re.compile(rf'(เบอ[ร]*[์]*โท[ร]*[สศ]ั[พบ][ท]*[์]*)', re.IGNORECASE), 'เบอร์โทรศัพท์'),
+]
+
+patterns = general_patterns + product_name_pattern + spec_general_patterns + corp_patterns
