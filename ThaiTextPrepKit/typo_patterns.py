@@ -131,11 +131,12 @@ general_patterns = [
 
     # New in 1.2c
     (rf'ไม่[ไ]*มี', 'ไม่มี'),
-    (rf'ออ[ฟ]*[ฟห]ิ[ตศสซชษ]', 'ออฟฟิศ')
+    (rf'ออ[ฟ]*[ฟห]ิ[ตศสซชษ]', 'ออฟฟิศ'),
 
     # Base end
     #(rf'()', ''),
-    (rf'(&nbsp;)', ''),
+    (rf'([&]*nbsp;)', ''),
+    (rf'([&]*amp;)', ''),
     (rf'(?<=\S)\.(?=\s|$)', ''), # remove the full stop mark at the end of a sentence
 ]
 
@@ -162,6 +163,6 @@ corp_specific_patterns = [
 
 drop_ignore_token = [(re.compile(r'<IGNORE>(.*?)</IGNORE>', re.IGNORECASE), r'\1')]
 
-patterns = compile_patterns(general_patterns + product_name_pattern + spec_general_patterns) + drop_ignore_token
+patterns = compile_patterns(general_patterns + product_name_pattern + spec_general_patterns, ignore_token=True) + drop_ignore_token
 
 corp_patterns = compile_patterns(corp_specific_patterns + general_patterns + product_name_pattern + spec_general_patterns, ignore_token=True) + drop_ignore_token
