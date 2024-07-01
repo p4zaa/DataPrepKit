@@ -32,9 +32,8 @@ def get_thai_words_with_custom_dict(word_list: list):
 def thai_ner_tagging(text, ner):
     return ner.tag(text, tag=True)
 
-def fix_common_word(sentence, skip_patterns):
-    for pattern, replacement in typo_patterns.patterns:
-        #print(pattern)
+def fix_common_word(sentence, skip_patterns, patterns):
+    for pattern, replacement in patterns:
         if skip_patterns and pattern in skip_patterns:
           continue
         else:
@@ -50,6 +49,7 @@ def preprocess_text_batches(series: pl.Series,
                             lower_case: bool=True,
                             include_pattern: str='',
                             skip_patterns: list=None,
+                            patterns=typo_patterns.patterns,
                             **kwargs):
     if keep_format and return_token_list:
       raise ValueError("Only one of 'keep_format' and 'return_token_list' can be passed at a time.")
@@ -83,7 +83,7 @@ def preprocess_text_batches(series: pl.Series,
       sent = re.sub(pattern, ' ', sent) # Drop any character that not specify in this pattern
 
       # Convert to lowercase before calling fix_common_word
-      sent = fix_common_word(sent.strip(), skip_patterns)
+      sent = fix_common_word(sent.strip(), skip_patterns, patterns)
       #sent = fix_common_words.fix_common_word(sent)
       sent = sent.lower() if lower_case else sent
 
