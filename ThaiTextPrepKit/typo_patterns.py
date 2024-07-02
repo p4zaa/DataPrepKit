@@ -3,6 +3,18 @@ from ThaiTextPrepKit import __version__
 
 thai_consonants = "กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮ"
 vowel_typo = '่้๊๋็ีัเ์ื?' # ่ ้ ๊ ๋ ็ ี ั เ ื ์ ?
+thai_upper_vowels = (
+#  ั(ไม้หันอากาศ)  ิ(อิ)  ี(อี)  ึ(อึ)  ื(อือ)
+"""
+\u0e31\u0e34\u0e35\u0e36\u0e37
+"""
+)
+thai_under_vowels = (
+#  ุ(อุ)  ู(อู)
+"""
+\u0e38\u0e39
+"""
+)
 thai_tonemarks = (
 #  ็ ่ ้ ๊ ๋ ์ ํ ๎
 """
@@ -55,7 +67,7 @@ general_patterns = [
     (rf'(system|รบบ)', 'ระบบ'),
     (rf'(slip|สลิ[บผพ])', 'สลิป'),
     (rf'(error|เอ[{thai_tonemarks}]*อเร[{thai_tonemarks}]*อ)', 'ผิดพลาด'),
-    (rf'(เวิน|ฌงิน|เงิฯ|เงฺน)', 'เงิน'),
+    (rf'เวิน|ฌงิน|เงิฯ|เงฺน|เ[งว]อน(?!(ไข|[{thai_upper_vowels + thai_under_vowels}]))', 'เงิน'),
     (rf'(ร[ะ]*[ฟหก][ัะีํ๊]ส)', 'รหัส'),
     (rf'(\bpin(?![A-Za-z])|พิ[นณฯ](?!า))|(pwd|pas[s]*w[opi]rd)|(ร[ะ]*[ฟหกฆ][{vowel_typo}]*[าสว][ฟผป][{vowel_typo}][รนยฯ])|([พภ]า[ร]*[์]*[สดทต][เด้]ว[ิื]*[อ]*[ร]*[์ื]*[กดเตท])', 'รหัสผ่าน'),
     (rf'(อัต[ิ]*โนมัต[ิ]*)', 'อัตโนมัติ'),
@@ -137,6 +149,7 @@ general_patterns = [
     #(rf'()', ''),
     (rf'([&]*nbsp;)', ''),
     (rf'([&]*amp;)', ''),
+    (rf'([&]*quot;)', ''),
     (rf'(?<=\S)\.(?=\s|$)', ''), # remove the full stop mark at the end of a sentence
 ]
 
