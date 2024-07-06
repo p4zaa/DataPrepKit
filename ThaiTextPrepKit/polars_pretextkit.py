@@ -143,7 +143,7 @@ def preprocess_text_batches(series: pl.Series,
       else:
         return sent
 
-    return series.map_elements(lambda text: preprocess(text=text, trie=trie, **kwargs), return_dtype=pl.Utf8)
+    return series.map_elements(lambda text: preprocess(text=text, trie=trie, **kwargs), return_dtype=pl.List(pl.Utf8) if return_token_list else pl.Utf8)
 
 def thai_text_preprocessing(df, 
                             input_col, 
