@@ -48,7 +48,7 @@ def compile_patterns(patterns: list, ignore_token: bool=True) -> list[re.Pattern
 # Precompile regular expressions with the IGNORECASE flag
 general_patterns = [
     (rf'(ๅ)', 'า'),
-    (rf'(แอ[{thai_tonemarks}]บ)|(แอ[พปฟผ]*[พปฟผ]*ลิเคช[ัี]*[่้๊๋็ีัเ]น)|(แอ[่้๊๋็ีัเ]*[พปฟผฯ][ฯ]*(?!เปิ[่้๊๋็ีัเ]*ล))|ap[p]*lication|(?<![A-Za-z])app(?![A-Za-z])', 'แอปพลิเคชัน'),
+    (rf'(แอ[{thai_tonemarks}]บ)([พ]*ลิเ[ค]*ชั[{thai_tonemarks}]*น)*|(แอ[พปฟผ]*[พปฟผ]*ลิเคช[ัี]*[่้๊๋็ีัเ]น)|(แอ[่้๊๋็ีัเ]*[พปฟผฯ][ฯ]*(?!เปิ[่้๊๋็ีัเ]*ล))|ap[p]*lication|(?<![A-Za-z])app(?![A-Za-z])', 'แอปพลิเคชัน'),
     (rf'(?<![A-Za-z])apple(?![A-Za-z])|([เแ]อ[่้๊๋็ีัเ]*[ปผแบยลำพะฟห][เด้][ปบผ][ิฺอื]*[ลน])', 'แอปเปิ้ล'),
     (rf'(scan|แสกน)', 'สแกน'),
     (rf'(real[ -]*time)|(เรียล[ไใ]*[ทธ][า]*ม[{thanthakhat}]*)', 'realtime'),
@@ -150,7 +150,8 @@ general_patterns = [
     (rf'([&]*nbsp;)', ''),
     (rf'([&]*amp;)', ''),
     (rf'([&]*quot;)', ''),
-    (rf'(?<=\S)\.(?=\s|$)', ''), # remove the full stop mark at the end of a sentence
+    #(rf'(?<=\S)\.(?=\s|$)', ''), # remove the full stop mark at the end of a sentence
+    (rf'(?<=\S)\.(?=\s*$)', ''), # remove . only if it the last character in sentence
 ]
 
 product_name_pattern = [
@@ -174,8 +175,20 @@ corp_specific_patterns = [
     (rf'(เบอ[ร]*[์])', '<IGNORE>เบอร์</IGNORE>'),
 ]
 
+# Natural pattern for make the sentence more natural for reading and emotional (not recommend for analysis)
+natural_pattern_config = [
+    (rf'(เบอ[ร]*[์]*โท[ร]*[สศ]ั[พบ][ท]*[์]*)', '<IGNORE>เบอร์โทรศัพท์</IGNORE>'),
+    (rf'(เบอ[ร]*[์]*โท[ร]*)', '<IGNORE>เบอร์โทร</IGNORE>'),
+    (rf'(เบอ[ร]*[์])', '<IGNORE>เบอร์</IGNORE>'),
+
+    # แอปฯ
+    (rf'(แอ[{thai_tonemarks}]*[ฟปพผฯ]+)(?![พ]*ลิเ[ค]*ชั[{thai_tonemarks}]*น)|(แอ[{thai_tonemarks}][บฯ]+)(?![พ]*ลิเ[ค]*ชั[{thai_tonemarks}]*น)', '<IGNORE>แอปฯ</IGNORE>')
+]
+
 drop_ignore_token = [(re.compile(r'<IGNORE>(.*?)</IGNORE>', re.IGNORECASE), r'\1')]
 
 patterns = compile_patterns(general_patterns + product_name_pattern + spec_general_patterns, ignore_token=True) + drop_ignore_token
 
 corp_patterns = compile_patterns(corp_specific_patterns + general_patterns + product_name_pattern + spec_general_patterns, ignore_token=True) + drop_ignore_token
+
+natural_patterns = compile_patterns(natural_pattern_config + general_patterns + product_name_pattern + spec_general_patterns, ignore_token=True) + drop_ignore_token
