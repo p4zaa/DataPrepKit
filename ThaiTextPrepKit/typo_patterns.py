@@ -170,9 +170,6 @@ spec_general_patterns = [
 corp_specific_patterns = [
     (rf'เ[รล][ทต]', 'เรท'),
     (rf'เว[ฟปผ]', 'เวฟ'),
-    (rf'(เบอ[ร]*[์]*โท[ร]*[สศ]ั[พบ][ท]*[์]*)', '<IGNORE>เบอร์โทรศัพท์</IGNORE>'),
-    (rf'(เบอ[ร]*[์]*โท[ร]*)', '<IGNORE>เบอร์โทร</IGNORE>'),
-    (rf'(เบอ[ร]*[์])', '<IGNORE>เบอร์</IGNORE>'),
 ]
 
 # Natural pattern for make the sentence more natural for reading and emotional (not recommend for analysis)
@@ -189,6 +186,6 @@ drop_ignore_token = [(re.compile(r'<IGNORE>(.*?)</IGNORE>', re.IGNORECASE), r'\1
 
 patterns = compile_patterns(general_patterns + product_name_pattern + spec_general_patterns, ignore_token=True) + drop_ignore_token
 
-corp_patterns = compile_patterns(corp_specific_patterns + general_patterns + product_name_pattern + spec_general_patterns, ignore_token=True) + drop_ignore_token
+corp_patterns = compile_patterns(corp_specific_patterns + natural_pattern_config + general_patterns + product_name_pattern + spec_general_patterns, ignore_token=True) + drop_ignore_token
 
 natural_patterns = compile_patterns(natural_pattern_config + general_patterns + product_name_pattern + spec_general_patterns, ignore_token=True) + drop_ignore_token
