@@ -58,7 +58,6 @@ general_patterns = [
 
     #(rf'internet (b(an|na)[gk]*ing)', 'Internet Banking'),
     #(rf'(?<!scb business\s)(?<!ba(?:ht|th))(?<!ba(?:ht|th)\s)((inter)*net)(?!\sb(an|na)king)|(อิ[น]*[เ]*[ทต]อ[ร]*[ื์]*)เ[นฯณรยญ][{vowel_typo}]*[ตจคดกทมน]|([อแิ][อิืฺ์ี]*[รนณฯญย][ดเ้][ทตมคจ][{vowel_typo}][แอิ]*[ร]*[ื์]*[รณนฯย]*[ดเ้][รณนฯย][{vowel_typo}]*[คตจทม๖?]*[คตจทม๖?{vowel_typo}]*[คตจทม๖?{vowel_typo}]*)|(?<!บา[ทมธต]\s)(?<!บา[ทมธต])(เน[{vowel_typo}]*[ตท?๖][ื์]*[ตท?๖]*[ื์]*)', 'อินเทอร์เน็ต'),
-    
 
     (rf'(บั[นรญณ][ชข][ีร])|(แอ[{thai_tonemarks}]*ค[ฯ]*(เค[{thai_tonemarks}]*า[ทตค]*[ื์]*)*)|(ac[c]*ount)|(?<=[{thai_consonants} ])(acc)(?![A-Za-z])', 'บัญชี'),
     (rf'(sms)', 'ข้อความ'),
@@ -144,6 +143,9 @@ general_patterns = [
     # New in 1.2c
     (rf'ไม่[ไ]*มี', 'ไม่มี'),
     (rf'ออ[ฟ]*[ฟห]ิ[ตศสซชษ]', 'ออฟฟิศ'),
+
+    # 1.2g
+    (rf'ค่าคอม[ฯ]*', 'ค่าคอมมิชชั่น'),
 
     # Base end
     #(rf'()', ''),
