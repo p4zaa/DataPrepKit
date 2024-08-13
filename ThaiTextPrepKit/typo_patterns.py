@@ -181,7 +181,7 @@ natural_pattern_config = [
     (rf'(เบอ[ร]*[์])', '<IGNORE>เบอร์</IGNORE>'),
 
     # แอปฯ
-    (rf'(แอ[{thai_tonemarks}]*[ฟปพผฯ]+)(?![พ]*ลิเ[ค]*ชั[{thai_tonemarks}]*น)|(แอ[{thai_tonemarks}][บฯ]+)(?![พ]*ลิเ[ค]*ชั[{thai_tonemarks}]*น)', '<IGNORE>แอปฯ</IGNORE>')
+    (rf'(แอ[{thai_tonemarks}]*[ฟปพผฯ]+)(?![พ]*ลิเ[ค]*ชั[{thai_tonemarks}]*น)|(แอ[{thai_tonemarks}][บฯ]+)(?![พ]*ลิเ[ค]*ชั[{thai_tonemarks}]*น)', '<IGNORE>แอป</IGNORE>')
 ]
 
 drop_ignore_token = [(re.compile(r'<IGNORE>(.*?)</IGNORE>', re.IGNORECASE), r'\1')]
