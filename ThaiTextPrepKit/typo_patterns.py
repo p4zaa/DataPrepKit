@@ -40,9 +40,9 @@ gg = [
 
 def compile_patterns(patterns: list, ignore_token: bool=True) -> list[re.Pattern]:
     if ignore_token:
-        compiled_patterns = [(re.compile(rf'(?<!<IGNORE>)({pattern})', re.IGNORECASE), replacement) for pattern, replacement in patterns]
+        compiled_patterns = [(re.compile(rf'(?<!<IGNORE>)({pattern})', 0 if '<CASESENSITIVE>' in replacement else re.IGNORECASE), replacement) for pattern, replacement in patterns]
     else:
-        compiled_patterns = [(re.compile(rf'{pattern}', re.IGNORECASE), replacement) for pattern, replacement in patterns]
+        compiled_patterns = [(re.compile(rf'{pattern}', 0 if '<CASESENSITIVE>' in replacement else re.IGNORECASE), replacement) for pattern, replacement in patterns]
     return compiled_patterns
 
 # Precompile regular expressions with the IGNORECASE flag
@@ -156,17 +156,25 @@ general_patterns = [
     (rf'(?<=\S)\.(?=\s*$)', ''), # remove . only if it the last character in sentence
 ]
 
-product_name_pattern = [
+location_patterns = [
+    (rf'(สา[ธฑ]ร)', 'สาทร'),
+]
+
+product_name_patterns = [
     (rf'((กรุงไท[ย]*)เน[{thai_tonemarks}]*[กหดป])', 'กรุงไทยเน็กซ์'),
     (rf'((ตู้|เครื่อง)(อั[{thai_tonemarks}]*[พปผ]|ปรับ)(สมุด|บัญชี)+)', 'เครื่อง CDM'),
     (rf'(ba(ht|th)[ ]*net)|(บา[ทธมตคจ][ ]*เน[{thai_tonemarks}]*[ตคทจม])', 'BAHTNET'),
-    (rf'(scb bu[s]+ines[s]* net)', 'SCB Business Net'),
+    (rf'((scb )*bu[s]+i[n]*es[s]* net)', 'SCB Business Net'),
 ]
 
 spec_general_patterns = [
     (rf'internet (b(an|na)[gk]*ing)', 'Internet Banking'),
     (rf'(?<!scb business\s)(?<!ba(?:ht|th))(?<!ba(?:ht|th)\s)((inter)*net)(?!\sb(an|na)king)|(อิ[น]*[เ]*[ทต]อ[ร]*[ื์]*)เ[นฯณรยญ][{vowel_typo}]*[ตจคดกทมน]|([อแิ][อิืฺ์ี]*[รนณฯญย][ดเ้][ทตมคจ][{vowel_typo}][แอิ]*[ร]*[ื์]*[รณนฯย]*[ดเ้][รณนฯย][{vowel_typo}]*[คตจทม๖?]*[คตจทม๖?{vowel_typo}]*[คตจทม๖?{vowel_typo}]*)|(?<!บา[ทมธต]\s)(?<!บา[ทมธต])(เน[{vowel_typo}]*[ตท?๖][ื์]*[ตท?๖]*[ื์]*)', 'อินเทอร์เน็ต'),
     (rf'[ท]*ันสมัย', 'ทันสมัย'),
+    
+    #1.2h
+    (rf'Bu[s]+i[n]*es[s]*', '<CASESENSITIVE>Business'),
+    (rf'bu[s]+i[n]*es[s]*', '<CASESENSITIVE>business'),
 ]
 
 corp_specific_patterns = [
@@ -185,10 +193,11 @@ natural_pattern_config = [
     (rf'(แอ[{thai_tonemarks}]*[ฟปพผฯ])(?![พ]*ลิเ[ค]*ชั[{thai_tonemarks}]*น)|(แอ[{thai_tonemarks}][บฯ]+)(?![พ]*ลิเ[ค]*ชั[{thai_tonemarks}]*น)', '<IGNORE>แอป</IGNORE>'),
 ]
 
-drop_ignore_token = [(re.compile(r'<IGNORE>(.*?)</IGNORE>', re.IGNORECASE), r'\1')]
+drop_ignore_token = [(re.compile(r'<IGNORE>(.*?)</IGNORE>', re.IGNORECASE), r'\1'),
+                     (re.compile(r'<CASESENSITIVE>', re.IGNORECASE), '')]
 
-patterns = compile_patterns(general_patterns + product_name_pattern + spec_general_patterns, ignore_token=True) + drop_ignore_token
+patterns = compile_patterns(general_patterns + product_name_patterns + spec_general_patterns + location_patterns, ignore_token=True) + drop_ignore_token
 
-corp_patterns = compile_patterns(corp_specific_patterns + natural_pattern_config + general_patterns + product_name_pattern + spec_general_patterns, ignore_token=True) + drop_ignore_token
+corp_patterns = compile_patterns(corp_specific_patterns + natural_pattern_config + general_patterns + product_name_patterns + spec_general_patterns + location_patterns, ignore_token=True) + drop_ignore_token
 
-natural_patterns = compile_patterns(natural_pattern_config + general_patterns + product_name_pattern + spec_general_patterns, ignore_token=True) + drop_ignore_token
+natural_patterns = compile_patterns(natural_pattern_config + general_patterns + product_name_patterns + spec_general_patterns + location_patterns, ignore_token=True) + drop_ignore_token
