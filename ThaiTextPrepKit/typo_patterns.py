@@ -147,6 +147,9 @@ general_patterns = [
     # 1.2g
     (rf'ค่าคอม[ฯ]*', 'ค่าคอมมิชชั่น'),
 
+    # 1.2i
+    (rf'เว[{thai_tonemarks}][บปผลย]ไซ[{thai_tonemarks}]*[ตคสซด][{thanthakhat}]*', 'เว็บไซต์'),
+
     # Base end
     #(rf'()', ''),
     (rf'([&]*nbsp;)', ''),
