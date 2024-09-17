@@ -61,9 +61,12 @@ def preprocess_text_batches(series: pl.Series,
 
     def preprocess(text, trie=trie, **kwargs):
       url_pattern = re.compile(
-          'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+          r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
       tag_pattern = re.compile(
-          '@(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+          r'@(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+      hashtag_pattern = re.compile(
+          r'#(?:[a-zA-Z0-9$-_@.&+!*(),]|%[0-9a-fA-F]{2}|[\u0E00-\u0E7F])+')
+      
       thai_pattern = re.compile('[ก-๙]+')
       english_pattern = re.compile('[A-Za-z]+')
       ner_options = kwargs.get('ner_options')
@@ -71,6 +74,7 @@ def preprocess_text_batches(series: pl.Series,
       text = str(text)
       sent = url_pattern.sub('', text)
       sent = tag_pattern.sub('', sent)
+      sent = hashtag_pattern.sub('', sent)
       sent = sent.replace('\\r', ' ')
       sent = sent.replace('\\"', ' ')
       sent = sent.replace('\\n', ' ')

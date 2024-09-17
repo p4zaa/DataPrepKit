@@ -155,6 +155,7 @@ general_patterns = [
     (rf'([&]*nbsp;)', ''),
     (rf'([&]*amp;)', ''),
     (rf'([&]*quot;)', ''),
+    (rf'([&]*gt;)', ''),
     #(rf'(?<=\S)\.(?=\s|$)', ''), # remove the full stop mark at the end of a sentence
     (rf'(?<=\S)\.(?=\s*$)', ''), # remove . only if it the last character in sentence
 ]
