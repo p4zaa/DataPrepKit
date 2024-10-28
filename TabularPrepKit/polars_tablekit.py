@@ -26,7 +26,7 @@ def drop_duplicates_multilabel(df: pl.DataFrame, id_cols: list, label_cols: list
                 pl.col(label_cols).filter(pl.col(label_cols).is_not_null()).cast(pl.Utf8),
             )\
             .with_columns(
-                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x))).list.join('|').alias(alias_str),
+                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x)), return_dtype=pl.List(pl.Utf8)).list.join('|').alias(alias_str),
             )\
             .select(pl.col(id_cols + [alias_str])),
             on=id_cols,
@@ -48,7 +48,7 @@ def drop_duplicates_multilabel(df: pl.DataFrame, id_cols: list, label_cols: list
                 pl.col(label_cols).filter(pl.col(label_cols).is_not_null()).cast(pl.Utf8),
             )\
             .with_columns(
-                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x))).alias(alias_str),
+                pl.concat_list(pl.col(label_cols)).map_elements(lambda x: list(set(x)), return_dtype=pl.List(pl.Utf8)).alias(alias_str),
             )\
             .select(pl.col(id_cols + [alias_str])),
             on=id_cols,
