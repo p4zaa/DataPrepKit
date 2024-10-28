@@ -21,7 +21,7 @@ def drop_duplicates_multilabel(df: pl.DataFrame, id_cols: list, label_cols: list
         .join(
             df\
             .lazy()\
-            .group_by(by=id_cols)\
+            .group_by(id_cols)\
             .agg(
                 pl.col(label_cols).filter(pl.col(label_cols).is_not_null()).cast(pl.Utf8),
             )\
@@ -43,7 +43,7 @@ def drop_duplicates_multilabel(df: pl.DataFrame, id_cols: list, label_cols: list
         .join(
             df\
             .lazy()\
-            .group_by(by=id_cols)\
+            .group_by(id_cols)\
             .agg(
                 pl.col(label_cols).filter(pl.col(label_cols).is_not_null()).cast(pl.Utf8),
             )\
