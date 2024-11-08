@@ -2,7 +2,7 @@ import re
 from ThaiTextPrepKit import __version__
 
 thai_consonants = "กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮ"
-vowel_typo = '่้๊๋็ีัเ์ื?' # ่ ้ ๊ ๋ ็ ี ั เ ื ์ ?
+vowel_typo = ' ้ ๊ ๋ ็ ี ั  ื ์ ?' # ่ ้ ๊ ๋ ็ ี ั  ื ์ ?
 thai_upper_vowels = (
 #  ั(ไม้หันอากาศ)  ิ(อิ)  ี(อี)  ึ(อึ)  ื(อือ)
 """
@@ -48,7 +48,6 @@ def compile_patterns(patterns: list, ignore_token: bool=True) -> list[re.Pattern
 # Precompile regular expressions with the IGNORECASE flag
 general_patterns = [
     (rf'(ๅ)', 'า'),
-    (rf'(แอ[{thai_tonemarks}]บ)([พ]*ลิเ[ค]*ชั[{thai_tonemarks}]*น)*|(แอ[พปฟผ]*[พปฟผ]*ลิเคช[ัี]*[่้๊๋็ีัเ]น)|(แอ[่้๊๋็ีัเ]*[พปฟผฯ][ฯ]*(?!เปิ[่้๊๋็ีัเ]*ล))|ap[p]*lication|(?<![A-Za-z])app(?![A-Za-z])', 'แอปพลิเคชัน'),
     (rf'(?<![A-Za-z])apple(?![A-Za-z])|([เแ]อ[่้๊๋็ีัเ]*[ปผแบยลำพะฟห][เด้][ปบผ][ิฺอื]*[ลน])', 'แอปเปิ้ล'),
     (rf'(scan|แสกน)', 'สแกน'),
     (rf'(real[ -]*time)|(เรียล[ไใ]*[ทธ][า]*ม[{thanthakhat}]*)', 'realtime'),
@@ -79,7 +78,7 @@ general_patterns = [
     (rf'(ไช่)', 'ใช่'),
     (rf'(รุ้)', 'รู้'),
     (rf'(แล[เ้่]ว)', 'แล้ว'),
-    (rf'(บ[.]*ช[.])|(บั[น|ร|ณ|ย]ชี)', 'บัญชี'),
+    (rf'(บ[.]*ช[.])|(บั[น|ร|ณ|ย]ชี)|(บ/ช)', 'บัญชี'),
     (rf'(เข้ส)', 'เข้า'),
     (rf'(ธุระกรมม|ธุระกรม|ธุรกรม|ธุรกรมม|ธุระกรรม|ทุระกรรม|ทุรกรรม|ทุรกรม|ทุรกรมม|ธุกรรม|ทุกรรม)', 'ธุรกรรม'),
     #(rf'(อัพ)', 'อัป'),
@@ -100,9 +99,9 @@ general_patterns = [
     (rf'มา[ก]+(?!ว่า)', 'มาก'),
     (rf'เก[ณ]([ฑพทฐ][{thanthakhat}])*|เก[รญนฯ]*([ฑพทฐ][{thanthakhat}])', 'เกณฑ์'),
     (rf'(cal[l]*[ ]*center)|(คอ[นลบ]เซ[{thai_tonemarks}]*[นลยบญรฯ]เต[{thai_tonemarks}]*อ(ร[{thai_tonemarks}])*)', 'คอลเซ็นเตอร์'),
-    (rf'([ๆไใ]ม[{vowel_typo}]*[ๆไใำ]ด[{vowel_typo}]*)|(มั[{vowel_typo}]*ย[ๆไใำ]ด[{vowel_typo}]*)|(มั[{vowel_typo}]*ยดั[{vowel_typo}]*ย)|(มั[{vowel_typo}]*ยด[{vowel_typo}]*าย)|(มั[{vowel_typo}]*ยดร[{vowel_typo}]*[า]*ย)|([ๆไใ]ม[{vowel_typo}]*ด[{vowel_typo}]*าย)|(บ่(ด[{vowel_typo}]*าย|ดร[{vowel_typo}]*[า]*ย|[ๆไใำ]ด[{vowel_typo}]*))', 'ไม่ได้'),
+    (rf'([ๆไใ]ม[{thai_tonemarks}]*[ๆไใำ]ด[{thai_tonemarks}]*)|(มั[{thai_tonemarks}]*ย[ๆไใำ]ด[{thai_tonemarks}]*)|(มั[{thai_tonemarks}]*ยดั[{thai_tonemarks}]*ย)|(มั[{thai_tonemarks}]*ยด[{thai_tonemarks}]*าย)|(มั[{thai_tonemarks}]*ยดร[{thai_tonemarks}]*[า]*ย)|([ๆไใ]ม[{thai_tonemarks}]*ด[{thai_tonemarks}]*าย)|(บ่(ด[{thai_tonemarks}]*าย|ดร[{thai_tonemarks}]*[า]*ย|[ๆไใำ]ด[{thai_tonemarks}]*))', 'ไม่ได้'),
     (rf'(ล[{thai_tonemarks}]าช[{thai_tonemarks}]*[า])', 'ล่าช้า'),
-    (rf'([โดเก]ค[ห]*[วสงย][ิื]*[{vowel_typo}]*[ดคตท]*[- ]*19)|(covid[ ]*19)', 'covid-19'),
+    (rf'([โดเก]ค[ห]*[วสงย][ิื]*[{vowel_typo}]*[ดคตท]*[- ]*(19)*)|(covid[ ]*19)', 'covid-19'),
     (rf'([ตคจ][{vowel_typo}]*[อแ][{vowel_typo}]*[วง][กดห][่าส][รน])', 'ต้องการ'),
     (rf'จ[.]*น[.]*ท[.]', 'เจ้าหน้าที่'),
     (rf'[ส]*[ะ]*เ(ส[ี]*)*ถ[ี]*ย[รนยณญ]', 'เสถียร'),
@@ -150,8 +149,22 @@ general_patterns = [
     # 1.2i
     (rf'เว[{thai_tonemarks}][บปผลย]ไซ[{thai_tonemarks}]*[ตคสซด][{thanthakhat}]*', 'เว็บไซต์'),
 
+    # 1.2k
+    (rf'ฟังชั่น', 'ฟังก์ชัน'),
+    (rf'(แอ[{thai_tonemarks}]*[พปฟ]|(แบงก์กิ้ง))โมบาย(แบงก์กิ้ง)*', 'โมบายแบงก์กิ้ง'),
+    (rf'websi(de|ld)', 'Website'),
+    (rf'อิเล[{thai_tonemarks}]*[กค]โท[ร]*นิ[กค]', 'อิเล็กทรอนิกส์'),
+    (rf'ฮาร์แวร์', 'ฮาร์ดแวร์'),
+    (rf'เจ้าหน้า(?!(ที่))', 'เจ้าหน้าที่'),
+    (rf'ปิโตเลียม', 'ปิโตรเลียม'),
+    (rf'เครื่องยน[ตร]*[{thanthakhat}]*', 'เครื่องยนต์'),
+    (rf'กยส.', 'กยศ.'),
+    (rf'ปฎิบัติ', 'ปฏิบัติ'),
+    (rf'', ''),
+    
+
     # Base end
-    #(rf'()', ''),
+    (rf'(แอ[{thai_tonemarks}]บ)([พ]*[ล]*ิเ[ค]*ชั[{thai_tonemarks}]*น)*|(แอ[พปฟผ]*[พปฟผ]*[ล]*ิเคช[ัี]*[่้๊๋็ีัเ]น)|(แอ[่้๊๋็ีัเ]*[พปฟผฯ][ฯ]*(?!เปิ[่้๊๋็ีัเ]*ล))|ap[p]*lication|(?<![A-Za-z])app(?![A-Za-z])', 'แอปพลิเคชัน'),
     (rf'([&]*nbsp;)', ''),
     (rf'([&]*amp;)', ''),
     (rf'([&]*quot;)', ''),
