@@ -101,7 +101,7 @@ general_patterns = [
     (rf'(cal[l]*[ ]*center)|(คอ[นลบ]เซ[{thai_tonemarks}]*[นลยบญรฯ]เต[{thai_tonemarks}]*อ(ร[{thai_tonemarks}])*)', 'คอลเซ็นเตอร์'),
     (rf'([ๆไใ]ม[{thai_tonemarks}]*[ๆไใำ]ด[{thai_tonemarks}]*)|(มั[{thai_tonemarks}]*ย[ๆไใำ]ด[{thai_tonemarks}]*)|(มั[{thai_tonemarks}]*ยดั[{thai_tonemarks}]*ย)|(มั[{thai_tonemarks}]*ยด[{thai_tonemarks}]*าย)|(มั[{thai_tonemarks}]*ยดร[{thai_tonemarks}]*[า]*ย)|([ๆไใ]ม[{thai_tonemarks}]*ด[{thai_tonemarks}]*าย)|(บ่(ด[{thai_tonemarks}]*าย|ดร[{thai_tonemarks}]*[า]*ย|[ๆไใำ]ด[{thai_tonemarks}]*))', 'ไม่ได้'),
     (rf'(ล[{thai_tonemarks}]าช[{thai_tonemarks}]*[า])', 'ล่าช้า'),
-    (rf'([โดเก]ค[ห]*[วสงย][ิื]*[{vowel_typo}]*[ดคตท]*[- ]*(19)*)|(covid[ ]*19)', 'covid-19'),
+    #(rf'([โดเก]ค[ห]*[วสงย][ิื]*[{vowel_typo}]*[ดคตท]*[- ]*(19)*)|(covid[ ]*19)', 'covid-19'),
     (rf'([ตคจ][{vowel_typo}]*[อแ][{vowel_typo}]*[วง][กดห][่าส][รน])', 'ต้องการ'),
     (rf'จ[.]*น[.]*ท[.]', 'เจ้าหน้าที่'),
     (rf'[ส]*[ะ]*เ(ส[ี]*)*ถ[ี]*ย[รนยณญ]', 'เสถียร'),
@@ -161,6 +161,9 @@ general_patterns = [
     (rf'กยส.', 'กยศ.'),
     (rf'ปฎิบัติ', 'ปฏิบัติ'),
     (rf'', ''),
+
+    # 1.2l
+    # nothing for now
     
 
     # Base end
