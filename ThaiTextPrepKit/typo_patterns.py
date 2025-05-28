@@ -176,6 +176,11 @@ general_patterns = [
     (rf'(?<=\S)\.(?=\s*$)', ''), # remove . only if it the last character in sentence
 ]
 
+#1.2o
+fixed_patterns = [
+    (rf'(ลุมพินี)', 'ลุม<IGNORE>พินี</IGNORE>'),
+]
+
 location_patterns = [
     (rf'(สา[ธฑ]ร)', 'สาทร'),
 ]
@@ -193,7 +198,7 @@ product_name_patterns = [
 spec_general_patterns = [
     (rf'internet (b(an|na)[gk]*ing)', 'Internet Banking'),
     #(rf'(?<!scb business\s)(?<!k[ -]biz\s)(?<!kbiz\s)(?<!K Biz\s)(?<!ba(?:ht|th))(?<!ba(?:ht|th)\s)(?<!บา[ทมธต])(?<!บา[ทมธต])\s((inter)*net)(?!\sb(an|na)king)|(อิ[น]*[เ]*[ทต]อ[ร]*[ื์]*)เ[นฯณรยญ][{vowel_typo}]*[ตจคดกทมน]|([อแิ][อิืฺ์ี]*[รนณฯญย][ดเ้][ทตมคจ][{vowel_typo}][แอิ]*[ร]*[ื์]*[รณนฯย]*[ดเ้][รณนฯย][{vowel_typo}]*[คตจทม๖?]*[คตจทม๖?{vowel_typo}]*[คตจทม๖?{vowel_typo}]*)|(?<!ba(?:ht|th))(?<!ba(?:ht|th)\s)(?<!บา[ทมธต]\s)(?<!บา[ทมธต])(เน[{vowel_typo}]*[ตท?๖][ื์]*[ตท?๖]*[ื์]*)', 'อินเทอร์เน็ต'),
-    (rf'(อิ[น]*[เ]*[ทต]อ[ร]*[ื์]*)เ[นฯณรยญ][{vowel_typo}]*[ตจคดกทมน]|([อแิ][อิืฺ์ี]*[รนณฯญย][ดเ้][ทตมคจ][{vowel_typo}][แอิ]*[ร]*[ื์]*[รณนฯย]*[ดเ้][รณนฯย][{vowel_typo}]*[คตจทม๖?]*[คตจทม๖?{vowel_typo}]*[คตจทม๖?{vowel_typo}]*)', 'อินเทอร์เน็ต'),
+    (rf'(internet)(?!\sb(an|na)king)|(อิ[น]*[เ]*[ทต]อ[ร]*[ื์]*)เ[นฯณรยญ][{vowel_typo}]*[ตจคดกทมน]|([อแิ][อิืฺ์ี]*[รนณฯญย][ดเ้][ทตมคจ][{vowel_typo}][แอิ]*[ร]*[ื์]*[รณนฯย]*[ดเ้][รณนฯย][{vowel_typo}]*[คตจทม๖?]*[คตจทม๖?{vowel_typo}]*[คตจทม๖?{vowel_typo}]*)', 'อินเทอร์เน็ต'),
     (rf'[ท]*ันสมัย', 'ทันสมัย'),
     
     #1.2h
@@ -220,8 +225,8 @@ natural_pattern_config = [
 drop_ignore_token = [(re.compile(r'<IGNORE>(.*?)</IGNORE>', re.IGNORECASE), r'\1'),
                      (re.compile(r'<CASESENSITIVE>', re.IGNORECASE), '')]
 
-patterns = compile_patterns(general_patterns + product_name_patterns + spec_general_patterns + location_patterns, ignore_token=True) + drop_ignore_token
+patterns = compile_patterns(fixed_patterns + general_patterns + product_name_patterns + spec_general_patterns + location_patterns, ignore_token=True) + drop_ignore_token
 
-corp_patterns = compile_patterns(corp_specific_patterns + natural_pattern_config + general_patterns + product_name_patterns + spec_general_patterns + location_patterns, ignore_token=True) + drop_ignore_token
+corp_patterns = compile_patterns(fixed_patterns + corp_specific_patterns + natural_pattern_config + general_patterns + product_name_patterns + spec_general_patterns + location_patterns, ignore_token=True) + drop_ignore_token
 
-natural_patterns = compile_patterns(natural_pattern_config + general_patterns + product_name_patterns + spec_general_patterns + location_patterns, ignore_token=True) + drop_ignore_token
+natural_patterns = compile_patterns(fixed_patterns + natural_pattern_config + general_patterns + product_name_patterns + spec_general_patterns + location_patterns, ignore_token=True) + drop_ignore_token
