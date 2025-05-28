@@ -183,13 +183,17 @@ location_patterns = [
 product_name_patterns = [
     (rf'((กรุงไท[ย]*)เน[{thai_tonemarks}]*[กหดป])', 'กรุงไทยเน็กซ์'),
     (rf'((ตู้|เครื่อง)(อั[{thai_tonemarks}]*[พปผ]|ปรับ)(สมุด|บัญชี)+)', 'เครื่อง CDM'),
-    (rf'(ba(ht|th)[ ]*net)|(บา[ทธมตคจ][ ]*เน[{thai_tonemarks}]*[ตคทจม])', 'BAHTNET'),
+    (rf'(ba(ht|th)[ ]*((net)|(เน[{thai_tonemarks}]*[ตคทจม])))|(บา[ทธมตคจ][ ]*((เน[{thai_tonemarks}]*[ตคทจม]|net)))', 'BAHTNET'),
     (rf'((scb )*bu[s]+i[n]*es[s]* net)', 'SCB Business Net'),
+    
+    #1.2m
+    (rf'([k][ -]*biz[ -]*(net)*)', 'K Biz Net'),
 ]
 
 spec_general_patterns = [
     (rf'internet (b(an|na)[gk]*ing)', 'Internet Banking'),
-    (rf'(?<!scb business\s)(?<!ba(?:ht|th))(?<!ba(?:ht|th)\s)((inter)*net)(?!\sb(an|na)king)|(อิ[น]*[เ]*[ทต]อ[ร]*[ื์]*)เ[นฯณรยญ][{vowel_typo}]*[ตจคดกทมน]|([อแิ][อิืฺ์ี]*[รนณฯญย][ดเ้][ทตมคจ][{vowel_typo}][แอิ]*[ร]*[ื์]*[รณนฯย]*[ดเ้][รณนฯย][{vowel_typo}]*[คตจทม๖?]*[คตจทม๖?{vowel_typo}]*[คตจทม๖?{vowel_typo}]*)|(?<!บา[ทมธต]\s)(?<!บา[ทมธต])(เน[{vowel_typo}]*[ตท?๖][ื์]*[ตท?๖]*[ื์]*)', 'อินเทอร์เน็ต'),
+    #(rf'(?<!scb business\s)(?<!k[ -]biz\s)(?<!kbiz\s)(?<!K Biz\s)(?<!ba(?:ht|th))(?<!ba(?:ht|th)\s)(?<!บา[ทมธต])(?<!บา[ทมธต])\s((inter)*net)(?!\sb(an|na)king)|(อิ[น]*[เ]*[ทต]อ[ร]*[ื์]*)เ[นฯณรยญ][{vowel_typo}]*[ตจคดกทมน]|([อแิ][อิืฺ์ี]*[รนณฯญย][ดเ้][ทตมคจ][{vowel_typo}][แอิ]*[ร]*[ื์]*[รณนฯย]*[ดเ้][รณนฯย][{vowel_typo}]*[คตจทม๖?]*[คตจทม๖?{vowel_typo}]*[คตจทม๖?{vowel_typo}]*)|(?<!ba(?:ht|th))(?<!ba(?:ht|th)\s)(?<!บา[ทมธต]\s)(?<!บา[ทมธต])(เน[{vowel_typo}]*[ตท?๖][ื์]*[ตท?๖]*[ื์]*)', 'อินเทอร์เน็ต'),
+    (rf'(อิ[น]*[เ]*[ทต]อ[ร]*[ื์]*)เ[นฯณรยญ][{vowel_typo}]*[ตจคดกทมน]|([อแิ][อิืฺ์ี]*[รนณฯญย][ดเ้][ทตมคจ][{vowel_typo}][แอิ]*[ร]*[ื์]*[รณนฯย]*[ดเ้][รณนฯย][{vowel_typo}]*[คตจทม๖?]*[คตจทม๖?{vowel_typo}]*[คตจทม๖?{vowel_typo}]*)', 'อินเทอร์เน็ต'),
     (rf'[ท]*ันสมัย', 'ทันสมัย'),
     
     #1.2h
